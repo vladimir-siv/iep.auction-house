@@ -100,3 +100,7 @@ D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.c
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.csproj.CopyComplete
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.pdb
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.dll
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.SqlServer.dll
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.xml
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.SqlServer.xml
