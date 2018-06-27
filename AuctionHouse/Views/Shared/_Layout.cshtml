@@ -1,42 +1,175 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
-</head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
-    </div>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-</body>
+	<meta name="author" content="Vladimir Sivčev">
+	<meta name="description" content="Auction House Website">
+
+	<title>@ViewBag.Title</title>
+
+	<link rel="icon" href="~/assets/res/logo.ico">
+	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Indie+Flower">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rammetto+One">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cookie">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	@Styles.Render("~/assets/css/utility.css", "~/assets/css/addition.css", "~/assets/css/layout.css", "~/assets/css/stylization.css")
+
+	@Scripts.Render("~/bundles/modernizr")
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	@Scripts.Render("~/Scripts/jquery.signalR-2.3.0.min.js", "~/signalr/hubs")
+	@Scripts.Render("~/assets/style-js/utility.style.js", "~/assets/style-js/fixed-dynamic.style.js", "~/assets/js/popups.js", "~/assets/js/config.js", "~/assets/js/views.js", "~/assets/ajax/actions.ajax.js")
+	@RenderSection("scripts", required: false)
+
+	@RenderSection("addition", required: false)
+</head>
+	<body class="fillup">
+		<div id="wrapper" class="border-boxed expanded fillup">
+			<div id="top-content-fixed" class="border-boxed expanded p-fixed on-top">
+				<header id="header-fixed" class="border-boxed expanded p-fixed top-trans-fast">
+					<div class="container-fluid">
+						<div class="row">
+							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+								<a href=""><img src="~/assets/res/logo.png" class="img-circle" height="40" alt="logo"></a>
+							</div>
+							<div class="col-lg-7 col-md-8 col-sm-6 col-xs-6 text-center"> </div>
+							<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 text-center">
+								<a class="btn btn-xs btn-link btn-link-light" onclick="registerPopupFeed.Toggle(0);"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+								<a class="btn btn-xs btn-link btn-link-light" onclick="loginPopupFeed.Toggle(0);"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+							</div>
+							<div class="col-lg-1 hidden-md hidden-sm hidden-xs"></div>
+						</div>
+					</div>
+				</header>
+			</div>
+			<header id="header-main" class="border-boxed expanded">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
+							<a href=""><img src="~/assets/res/logo.png" class="img-circle" height="80" alt="logo"></a>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-2 hidden-xs text-center">
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-2 hidden-xs text-center">
+							<a href=""><img src="~/assets/res/heading.png" alt="heading"></a>
+						</div>
+						<div class="col-lg-5 col-md-5 col-sm-6 col-xs-10 text-center">
+							<div class="row" style="height: 40px; padding-top: 3px;">
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+									<a class="btn btn-md btn-link btn-link-light" onclick="registerPopupFeed.Toggle(0);"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+								</div>
+							</div>
+							<div class="row" style="height: 40px; padding-top: 3px;">
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+								</div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
+									<a class="btn btn-md btn-link btn-link-light" onclick="loginPopupFeed.Toggle(0);"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</header>
+			<nav id="navbar-main" class="navbar navbar-inverse">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="">Auction House</a>
+					</div>
+					<ul class="nav navbar-nav">
+						<li class="active"><a href=""><i class="glyphicon glyphicon-home"> Home</i></a></li>
+						<li><a href="subjects.html"><i class="glyphicon glyphicon-list-alt"> Subjects</i></a></li>
+						<li><a href="tutors.html"><i class="glyphicon glyphicon-education"> Tutors</i></a></li>
+						<li><a href="library.html"><i class="glyphicon glyphicon-briefcase"> Library</i></a></li>
+						<li><a href="about.html"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
+					</ul>
+				</div>
+			</nav>
+			<div id="content" class="container">
+				@RenderBody()
+			</div>
+			<footer id="footer-main" class="border-boxed expanded">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+							<div class="row">
+								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2"></div>
+								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-8">
+									<p class="font-cookie font-lg text-bright"><i>Auction<span class="text-info">House</span></i><p>
+									<p class="font-times-new-roman font-xs text-bright"><b><a class="hover-text-decor-none text-bright" href="">Home Page</a></b> - <b><a class="hover-text-decor-none text-bright" href="#">Blog</a></b></p>
+									<p class="font-times-new-roman font-xs text-bright">ETF © 2018</p>
+								</div>
+								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2"></div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+							<div class="row margin-top-md">
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-right">
+									<i class="fa fa-map-marker icon-square-md"></i>
+								</div>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-left">
+									<p class="no-margin font-times-new-roman font-xs text-bright">
+										Bulevar kralja Aleksandra 73
+									</p>
+									<p class="no-margin font-times-new-roman font-xs text-bright">
+										<b>Belgrade, Republic of Serbia</b>
+									</p>
+								</div>
+							</div>
+							<div class="row margin-top-md">
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-right">
+									<i class="fa fa-phone icon-square-md"></i>
+								</div>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-left">
+									<p class="font-times-new-roman font-sm text-bright">
+										<b>+381 11/32-26-992</b>
+									</p>
+								</div>
+							</div>
+							<div class="row margin-top-md">
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-right">
+									<i class="fa fa-envelope icon-square-md"></i>
+								</div>
+								<div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-left">
+									<p class="font-times-new-roman font-sm text-bright">
+										<b><a class="hover-text-decor-none text-bright" href="mailto:#">dekanat@etf.bg.ac.rs</a></b>
+									</p>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+							<div class="row">
+								<div class="col-lg-3 col-md-2 col-sm-3 col-xs-2"></div>
+								<div class="col-lg-6 col-md-8 col-sm-6 col-xs-8">
+									<div class="row margin-top-xs">
+										<p class="font-times-new-roman font-sm text-bright">Tutor Center</p>
+									</div>
+									<div class="row margin-top-xs">
+										<p class="font-times-new-roman font-xs text-bright">
+											Student project in Infrascructures of Electronic Business<br />
+											Designed by Vladimir Sivčev<br />
+											Developed by Vladimir Sivčev
+										</p>
+									</div>
+									<div class="row margin-top-xs">
+										<a href="#"><i class="fa fa-facebook icon-oval-md"></i></a>
+										<a href="#"><i class="fa fa-twitter icon-oval-md"></i></a>
+										<a href="#"><i class="fa fa-linkedin icon-oval-md"></i></a>
+										<a href="#"><i class="fa fa-github icon-oval-md"></i></a>
+									</div>
+								</div>
+								<div class="col-lg-3 col-md-2 col-sm-3 col-xs-2"></div>
+							</div>
+						</div>
+					</div>
+					<div class="row hidden-lg hidden-md" style="height: 10px;"></div>
+				</div>
+			</footer>
+		</div>
+	</body>
 </html>
