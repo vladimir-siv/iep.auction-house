@@ -17,20 +17,21 @@ namespace AuctionHouse.Models
 
         public Guid ID { get; set; }
 
-        [Required]
-        [StringLength(64)]
+        [Required(ErrorMessage = "First name required")]
+        [StringLength(64, MinimumLength = 1, ErrorMessage = "First name cannot be empty or too long.")]
         public string FirstName { get; set; }
 
-        [Required]
-        [StringLength(64)]
+        [Required(ErrorMessage = "Last name required")]
+        [StringLength(64, MinimumLength = 1, ErrorMessage = "Last name cannot be empty or too long.")]
         public string LastName { get; set; }
 
-        [Required]
-        [StringLength(64)]
-        public string Email { get; set; }
+        [Required(ErrorMessage = "Email required")]
+		[EmailAddress(ErrorMessage = "Invalid Email Address")]
+		[StringLength(64, MinimumLength = 5, ErrorMessage = "Email address must be at least 5 characters long but not too long.")]
+		public string Email { get; set; }
 
-        [Required]
-        [StringLength(64)]
+        [Required(ErrorMessage = "Password required")]
+        [StringLength(64, MinimumLength = 3, ErrorMessage = "Password has to be at least 3 characters long but cannot be too long.")]
         public string Password { get; set; }
 
         public decimal Balance { get; set; }

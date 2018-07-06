@@ -49,6 +49,8 @@ D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\roslyn\vbc.rsp
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\roslyn\VBCSCompiler.exe
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\roslyn\VBCSCompiler.exe.config
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Antlr3.Runtime.dll
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.dll
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.SqlServer.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Microsoft.AI.Agent.Intercept.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Microsoft.AI.DependencyCollector.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Microsoft.AI.PerfCounterCollector.dll
@@ -76,6 +78,8 @@ D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.Razor.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\WebGrease.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Antlr3.Runtime.pdb
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.xml
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.SqlServer.xml
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Microsoft.AI.DependencyCollector.xml
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Microsoft.AI.Web.xml
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\Microsoft.AI.WindowsServer.xml
@@ -95,12 +99,8 @@ D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.Deployment.xml
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.Razor.xml
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.Optimization.xml
-D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.csprojResolveAssemblyReference.cache
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.csproj.CoreCompileInputs.cache
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.csproj.CopyComplete
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.pdb
-D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.dll
-D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.SqlServer.dll
-D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.xml
-D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\EntityFramework.SqlServer.xml
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.csprojResolveAssemblyReference.cache

@@ -10,6 +10,7 @@ namespace AuctionHouse.Controllers
 	{
 		public ActionResult Index()
 		{
+
 			return View();
 		}
 	}
