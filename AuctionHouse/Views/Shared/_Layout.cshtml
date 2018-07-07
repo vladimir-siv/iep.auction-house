@@ -34,7 +34,7 @@
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
-								<a href=""><img src="~/assets/res/logo.png" class="img-circle" height="40" alt="logo"></a>
+								<a href="/Home/Index"><img src="~/assets/res/logo.png" class="img-circle" height="40" alt="logo"></a>
 							</div>
 							<div class="col-lg-7 col-md-8 col-sm-6 col-xs-6 text-center"> </div>
 							<div class="col-lg-2 col-md-2 col-sm-4 col-xs-4 text-center">
@@ -58,12 +58,12 @@ else
 				<div class="container-fluid">
 					<div class="row">
 						<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-right">
-							<a href=""><img src="~/assets/res/logo.png" class="img-circle" height="80" alt="logo"></a>
+							<a href="/Home/Index"><img src="~/assets/res/logo.png" class="img-circle" height="80" alt="logo"></a>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-2 hidden-xs text-center">
 						</div>
 						<div class="col-lg-2 col-md-2 col-sm-2 hidden-xs text-center">
-							<a href=""><img src="~/assets/res/heading.png" alt="heading"></a>
+							<a href="/Home/Index"><img src="~/assets/res/heading.png" alt="heading"></a>
 						</div>
 						<div class="col-lg-5 col-md-5 col-sm-6 col-xs-10 text-center">
 @if (Session["user"] == null)
@@ -107,14 +107,14 @@ else
 			<nav id="navbar-main" class="navbar navbar-inverse">
 				<div class="container-fluid">
 					<div class="navbar-header">
-						<a class="navbar-brand" href="">Auction House</a>
+						<a class="navbar-brand" href="/Home/Index">Auction House</a>
 					</div>
 					<ul class="nav navbar-nav">
-						<li class="active"><a href=""><i class="glyphicon glyphicon-home"> Home</i></a></li>
-						<li><a href="subjects.html"><i class="glyphicon glyphicon-list-alt"> Subjects</i></a></li>
-						<li><a href="tutors.html"><i class="glyphicon glyphicon-education"> Tutors</i></a></li>
-						<li><a href="library.html"><i class="glyphicon glyphicon-briefcase"> Library</i></a></li>
-						<li><a href="about.html"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
+						<li @if (ViewBag.navIndex == 0) { <text>class = "active"</text> }><a href="/Home/Index"><i class="glyphicon glyphicon-home"> Home</i></a></li>
+						<li @if (ViewBag.navIndex == 1) { <text>class = "active"</text> }><a href="subjects.html"><i class="glyphicon glyphicon-list-alt"> Subjects</i></a></li>
+						<li @if (ViewBag.navIndex == 2) { <text>class = "active"</text> }><a href="tutors.html"><i class="glyphicon glyphicon-education"> Tutors</i></a></li>
+						<li @if (ViewBag.navIndex == 3) { <text>class = "active"</text> }><a href="library.html"><i class="glyphicon glyphicon-briefcase"> Library</i></a></li>
+						<li @if (ViewBag.navIndex == 4) { <text>class = "active"</text> }><a href="/Home/About"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
 					</ul>
 				</div>
 			</nav>
@@ -129,7 +129,7 @@ else
 								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2"></div>
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-8">
 									<p class="font-cookie font-lg text-bright"><i>Auction<span class="text-info">House</span></i><p>
-									<p class="font-times-new-roman font-xs text-bright"><b><a class="hover-text-decor-none text-bright" href="">Home Page</a></b> - <b><a class="hover-text-decor-none text-bright" href="#">Blog</a></b></p>
+									<p class="font-times-new-roman font-xs text-bright"><b><a class="hover-text-decor-none text-bright" href="/Home/Index">Home Page</a></b> - <b><a class="hover-text-decor-none text-bright" href="#">Blog</a></b></p>
 									<p class="font-times-new-roman font-xs text-bright">ETF © 2018</p>
 								</div>
 								<div class="col-lg-3 col-md-3 col-sm-3 col-xs-2"></div>

@@ -14,6 +14,7 @@ namespace AuctionHouse.Controllers
 		[HttpGet]
 		public ActionResult Index()
 		{
+			ViewBag.navIndex = 0;
 			return View();
 		}
 
@@ -25,6 +26,13 @@ namespace AuctionHouse.Controllers
 			else user = Session["user"] as User;
 			if (user == null) user = Models.User.Dummy;
 			return View(user);
+		}
+
+		[HttpGet]
+		public ActionResult About()
+		{
+			ViewBag.navIndex = 4;
+			return View();
 		}
 	}
 }
