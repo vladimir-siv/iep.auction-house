@@ -113,7 +113,7 @@ else
 						<li @if (ViewBag.navIndex == 0) { <text>class = "active"</text> }><a href="/Home/Index"><i class="glyphicon glyphicon-home"> Home</i></a></li>
 @if (Session["user"] != null)
 {
-						<li @if (ViewBag.navIndex == 1)	{ <text>class = "active"</text> }><a href="/Home/Auction"><i class="glyphicon glyphicon-list-alt"> Create auction</i></a></li>
+						<li @if (ViewBag.navIndex == 1)	{ <text>class = "active"</text> }><a href="/Home/Auction"><i class="glyphicon glyphicon-list-alt"> Auction</i></a></li>
 }
 						<li @if (ViewBag.navIndex == 2) { <text>class = "active"</text> }><a href="/Home/About"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
 					</ul>

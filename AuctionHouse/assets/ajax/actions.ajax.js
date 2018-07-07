@@ -13,7 +13,7 @@ function stdResponsePopupHandler(popupid, response, reload = true)
 	if (reload) window.location.reload();
 }
 
-function stdResponseAlertHandler(response, reload = false)
+function stdResponseAlertHandler(response, location = null)
 {
 	if (response.startsWith("#Error: "))
 	{
@@ -34,8 +34,12 @@ function stdResponseAlertHandler(response, reload = false)
 		var message = new AlertPopupFeed(Alert.New(type, response, true, "modal"));
 		message.Subscribe(alertPopup);
 		message.Show(0);
-		
-		if (reload) window.location.reload();
+
+		if (location !== null)
+		{
+			if (location === "") window.location.reload();
+			else window.location.replace(location);
+		}
 	}
 }
 
@@ -148,7 +152,9 @@ function changeAccountInfo(popupid, oldpassword, firstname, lastname, email, pas
 
 function createAuction(title, time, price, files)
 {
-	var invalidData = "<b>Error.</b>";
+	var invalidData = "&emsp;<b>Error:</b>";
+
+	files = files.prop("files");
 	
 	if (title === "")
 	{
@@ -162,12 +168,12 @@ function createAuction(title, time, price, files)
 	{
 		invalidData += "<br/>You must enter price!";
 	}
-	if (files[0].length === 0)
+	if (files.length === 0)
 	{
 		invalidData += "<br/>You must supply at least one picture!";
 	}
 	
-	if (invalidData !== "<b>Error.</b>")
+	if (invalidData !== "&emsp;<b>Error:</b>")
 	{
 		var error = new AlertPopupFeed(Alert.New("danger", invalidData));
 		error.Subscribe(alertPopup);
@@ -181,17 +187,17 @@ function createAuction(title, time, price, files)
 	formData.append("time", time);
 	formData.append("price", price);
 	
-	$.each(files.prop("files"), function(index, file) { formData.append('+file-' + index, file, file.name); });
-	
+	$.each(files, function(index, file) { formData.append('+file-' + index, file, file.name); });
+
 	$.ajax
 	({
 		url: "http://" + window.location.host + "/Auction/Create",
 		method: "POST",
-		data: data,
+		data: formData,
 		processData: false,
 		contentType: false,
 		dataType: "text",
-		success: function(response) { stdResponseAlertHandler(response); }
+		success: function(response) { stdResponseAlertHandler(response, "http://" + window.location.host + "/Auction/Show?id=" + response); }
 	});
 }
 

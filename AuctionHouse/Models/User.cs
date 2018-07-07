@@ -21,32 +21,36 @@ namespace AuctionHouse.Models
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
+            Auctions = new HashSet<Auction>();
             Bids = new HashSet<Bid>();
             TokenOrders = new HashSet<TokenOrder>();
         }
 
         public Guid ID { get; set; }
 
-        [Required(ErrorMessage = "First name required")]
-        [StringLength(64, MinimumLength = 1, ErrorMessage = "First name cannot be empty or too long.")]
-        public string FirstName { get; set; }
+		[Required(ErrorMessage = "First name required")]
+		[StringLength(64, MinimumLength = 1, ErrorMessage = "First name cannot be empty or too long.")]
+		public string FirstName { get; set; }
 
-        [Required(ErrorMessage = "Last name required")]
-        [StringLength(64, MinimumLength = 1, ErrorMessage = "Last name cannot be empty or too long.")]
-        public string LastName { get; set; }
+		[Required(ErrorMessage = "Last name required")]
+		[StringLength(64, MinimumLength = 1, ErrorMessage = "Last name cannot be empty or too long.")]
+		public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Email required")]
+		[Required(ErrorMessage = "Email required")]
 		[EmailAddress(ErrorMessage = "Invalid Email Address")]
 		[StringLength(64, MinimumLength = 5, ErrorMessage = "Email address must be at least 5 characters long but not too long.")]
 		public string Email { get; set; }
 
-        [Required(ErrorMessage = "Password required")]
-        [StringLength(64, MinimumLength = 3, ErrorMessage = "Password has to be at least 3 characters long but cannot be too long.")]
-        public string Password { get; set; }
+		[Required(ErrorMessage = "Password required")]
+		[StringLength(64, MinimumLength = 3, ErrorMessage = "Password has to be at least 3 characters long but cannot be too long.")]
+		public string Password { get; set; }
 
-        public decimal Balance { get; set; }
+		public decimal Balance { get; set; }
 
         public virtual Administrator Administrator { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Auction> Auctions { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bid> Bids { get; set; }

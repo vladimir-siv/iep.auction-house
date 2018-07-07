@@ -178,6 +178,7 @@
     <Compile Include="Models\Auction.cs" />
     <Compile Include="Models\AuctionHouseDB.cs" />
     <Compile Include="Models\Bid.cs" />
+    <Compile Include="Models\sysdiagram.cs" />
     <Compile Include="Models\SystemParameter.cs" />
     <Compile Include="Models\TokenOrder.cs" />
     <Compile Include="Models\User.cs" />

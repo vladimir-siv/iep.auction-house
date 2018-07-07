@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.IO;
 using AuctionHouse.Models;
 
 namespace AuctionHouse.Controllers
@@ -10,6 +9,12 @@ namespace AuctionHouse.Controllers
     public class AuctionController : Controller
     {
 		private AuctionHouseDB db = new AuctionHouseDB();
+
+		[HttpGet]
+		public ActionResult Show(string id)
+		{
+			return View();
+		}
 
 		[HttpPost]
 		public string Create(string title, int time, decimal price)
@@ -22,9 +27,25 @@ namespace AuctionHouse.Controllers
 			if (time <= 0) time = sysparams.DefaultAuctionTime;
 			if (price < 0) return "#Error: Invalid price.";
 
+			var uploadFailed = true;
+
+			var guid = Guid.NewGuid();
+
+			for (int i = 0; i < Request.Files.Count; ++i)
+			{
+				if (Request.Files[i].ContentType == "image/png")
+				{
+					Directory.CreateDirectory(Server.MapPath("~/assets/storage/auctions/" + guid.ToString() + "/"));
+					Request.Files[i].SaveAs(Server.MapPath("~/assets/storage/auctions/" + guid.ToString() + "/" + i + ".png"));
+					uploadFailed = false;
+				}
+			}
+
+			if (uploadFailed) return "#Error: You must supply at least one image.";
+			
 			Auction auction = new Auction
 			{
-				ID = Guid.NewGuid(),
+				ID = guid,
 				Title = title,
 				AuctionTime = time,
 				CreatedOn = DateTime.Now,
@@ -32,7 +53,8 @@ namespace AuctionHouse.Controllers
 				CompletedOn = null,
 				StartingPrice = price,
 				Currency = sysparams.Currency,
-				PriceRate = sysparams.PriceRate
+				PriceRate = sysparams.PriceRate,
+				Holder = ((User)Session["user"]).ID
 			};
 
 			try
@@ -42,7 +64,7 @@ namespace AuctionHouse.Controllers
 			}
 			catch { return "#Error: Could not create the auction. Some of the values are invalid."; }
 
-			return "Auction successfully created.";
+			return auction.ID.ToString();
 		}
 	}
 }

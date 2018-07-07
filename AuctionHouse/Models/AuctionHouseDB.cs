@@ -15,6 +15,7 @@ namespace AuctionHouse.Models
 		public virtual DbSet<Administrator> Administrators { get; set; }
 		public virtual DbSet<Auction> Auctions { get; set; }
 		public virtual DbSet<Bid> Bids { get; set; }
+		public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
 		public virtual DbSet<SystemParameters> SystemParameters { get; set; }
 		public virtual DbSet<TokenOrder> TokenOrders { get; set; }
 		public virtual DbSet<User> Users { get; set; }
@@ -40,7 +41,8 @@ namespace AuctionHouse.Models
 			modelBuilder.Entity<Auction>()
 				.HasMany(e => e.Bids)
 				.WithRequired(e => e.Auction1)
-				.HasForeignKey(e => e.Auction);
+				.HasForeignKey(e => e.Auction)
+				.WillCascadeOnDelete(false);
 
 			modelBuilder.Entity<Bid>()
 				.Property(e => e.Amount)
@@ -100,18 +102,25 @@ namespace AuctionHouse.Models
 
 			modelBuilder.Entity<User>()
 				.HasOptional(e => e.Administrator)
+				.WithRequired(e => e.User);
+
+			modelBuilder.Entity<User>()
+				.HasMany(e => e.Auctions)
 				.WithRequired(e => e.User)
-				.WillCascadeOnDelete();
+				.HasForeignKey(e => e.Holder)
+				.WillCascadeOnDelete(false);
 
 			modelBuilder.Entity<User>()
 				.HasMany(e => e.Bids)
 				.WithRequired(e => e.User)
-				.HasForeignKey(e => e.Bidder);
+				.HasForeignKey(e => e.Bidder)
+				.WillCascadeOnDelete(false);
 
 			modelBuilder.Entity<User>()
 				.HasMany(e => e.TokenOrders)
 				.WithRequired(e => e.User)
-				.HasForeignKey(e => e.Buyer);
+				.HasForeignKey(e => e.Buyer)
+				.WillCascadeOnDelete(false);
 		}
 
 		public SystemParameters GetCurrentSystemParameters()
@@ -152,7 +161,7 @@ namespace AuctionHouse.Models
 				from user in Users
 				where user.Email == email && user.Password == password
 				select user;
-			
+
 			var result = query.SingleOrDefault();
 
 			if (result != null)
