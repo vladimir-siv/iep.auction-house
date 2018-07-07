@@ -7,23 +7,6 @@ namespace AuctionHouse.Models
 
 	public partial class AuctionHouseDB : DbContext
 	{
-		private string MD5(string input)
-		{
-			var md5 = System.Security.Cryptography.MD5.Create();
-
-			byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-			byte[] hash = md5.ComputeHash(inputBytes);
-			
-			var sb = new System.Text.StringBuilder();
-
-			for (int i = 0; i < hash.Length; i++)
-			{
-				sb.Append(hash[i].ToString("X"));
-			}
-
-			return sb.ToString().ToLower();
-		}
-
 		public AuctionHouseDB()
 			: base("name=AuctionHouseDB")
 		{
@@ -131,14 +114,29 @@ namespace AuctionHouse.Models
 				.HasForeignKey(e => e.Buyer);
 		}
 
-		public void EncryptUserPassword(User user)
+		public User FindUserById(Guid guid)
 		{
-			user.Password = MD5(user.Password);
+			var query =
+				from user in Users
+				where user.ID == guid
+				select user;
+
+			return query.SingleOrDefault();
+		}
+
+		public User FindUserByEmail(string email)
+		{
+			var query =
+				from user in Users
+				where user.Email == email
+				select user;
+
+			return query.SingleOrDefault();
 		}
 
 		public User FindUserByEmailAndPassword(string email, string password, out bool isAdmin)
 		{
-			password = MD5(password);
+			password = password.ToMD5();
 
 			var query =
 				from user in Users

@@ -45,7 +45,7 @@
 }
 else
 {
-							<a class="btn btn-md btn-link btn-link-light"><span class="glyphicon glyphicon-user"></span> @(((AuctionHouse.Models.User)Session["user"]).FirstName) @(((AuctionHouse.Models.User)Session["user"]).LastName)</a>
+							<a class="btn btn-md btn-link btn-link-light" href="/Home/ViewProfile"><span class="glyphicon glyphicon-user"></span> @(((AuctionHouse.Models.User)Session["user"]).FirstName) @(((AuctionHouse.Models.User)Session["user"]).LastName)</a>
 							<a class="btn btn-xs btn-link btn-link-light" href="/Account/Logout">Log out</a>
 }
 							</div>
@@ -89,7 +89,7 @@ else
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
 								</div>
 								<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-center">
-									<a class="btn btn-md btn-link btn-link-light"><span class="glyphicon glyphicon-user"></span> @(((AuctionHouse.Models.User)Session["user"]).FirstName) @(((AuctionHouse.Models.User)Session["user"]).LastName)</a>
+									<a class="btn btn-md btn-link btn-link-light" href="/Home/ViewProfile"><span class="glyphicon glyphicon-user"></span> @(((AuctionHouse.Models.User)Session["user"]).FirstName) @(((AuctionHouse.Models.User)Session["user"]).LastName)</a>
 								</div>
 							</div>
 							<div class="row" style="height: 40px; padding-top: 3px;">

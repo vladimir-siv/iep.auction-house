@@ -8,7 +8,17 @@ namespace AuctionHouse.Models
 
     public partial class User
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+		public static User Dummy { get; } = new User
+		{
+			ID = Guid.Empty,
+			FirstName = "Unknown",
+			LastName = "User",
+			Email = "???",
+			Password = "???",
+			Balance = 0
+		};
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
             Bids = new HashSet<Bid>();
