@@ -168,6 +168,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AuctionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -185,24 +186,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\ajax\actions.ajax.js" />
-    <Content Include="assets\ajax\search.ajax.js" />
     <Content Include="assets\css\addition.css" />
     <Content Include="assets\css\layout.css" />
     <Content Include="assets\css\stylization.css" />
     <Content Include="assets\css\utility.css" />
-    <Content Include="assets\js\administration.js" />
+    <Content Include="assets\js\auctions.js" />
     <Content Include="assets\js\config.js" />
-    <Content Include="assets\js\notifications.js" />
-    <Content Include="assets\js\partialpost.js" />
+    <Content Include="assets\js\pagination.js" />
     <Content Include="assets\js\popups.js" />
-    <Content Include="assets\js\posts.js" />
-    <Content Include="assets\js\profile.js" />
-    <Content Include="assets\js\requests.js" />
-    <Content Include="assets\js\reviews.js" />
-    <Content Include="assets\js\subject-search.js" />
-    <Content Include="assets\js\tokens.js" />
-    <Content Include="assets\js\tutors.js" />
-    <Content Include="assets\js\users.js" />
     <Content Include="assets\js\views.js" />
     <Content Include="assets\res\accept.png" />
     <Content Include="assets\res\avatar.png" />
@@ -213,6 +204,7 @@
     <Content Include="assets\res\reject.png" />
     <Content Include="assets\res\seen.png" />
     <Content Include="assets\res\unseen.png" />
+    <Content Include="assets\storage\auctions\237598237968\0.png" />
     <Content Include="assets\style-js\fixed-dynamic.style.js" />
     <Content Include="assets\style-js\utility.style.js" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -295,15 +287,14 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
-    <Content Include="Views\Home\Index2.cshtml" />
+    <Content Include="Views\Home\Auction.cshtml" />
     <Content Include="Views\Home\ViewProfile.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="assets\storage\" />
-    <Folder Include="storage\auctions\237598237968\" />
     <Folder Include="Views\Account\" />
+    <Folder Include="Views\Auction\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

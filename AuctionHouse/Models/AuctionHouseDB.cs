@@ -15,7 +15,7 @@ namespace AuctionHouse.Models
 		public virtual DbSet<Administrator> Administrators { get; set; }
 		public virtual DbSet<Auction> Auctions { get; set; }
 		public virtual DbSet<Bid> Bids { get; set; }
-		public virtual DbSet<SystemParameter> SystemParameters { get; set; }
+		public virtual DbSet<SystemParameters> SystemParameters { get; set; }
 		public virtual DbSet<TokenOrder> TokenOrders { get; set; }
 		public virtual DbSet<User> Users { get; set; }
 
@@ -46,23 +46,23 @@ namespace AuctionHouse.Models
 				.Property(e => e.Amount)
 				.HasPrecision(24, 12);
 
-			modelBuilder.Entity<SystemParameter>()
+			modelBuilder.Entity<SystemParameters>()
 				.Property(e => e.SilverPackage)
 				.HasPrecision(24, 12);
 
-			modelBuilder.Entity<SystemParameter>()
+			modelBuilder.Entity<SystemParameters>()
 				.Property(e => e.GoldPackage)
 				.HasPrecision(24, 12);
 
-			modelBuilder.Entity<SystemParameter>()
+			modelBuilder.Entity<SystemParameters>()
 				.Property(e => e.PlatinumPackage)
 				.HasPrecision(24, 12);
 
-			modelBuilder.Entity<SystemParameter>()
+			modelBuilder.Entity<SystemParameters>()
 				.Property(e => e.Currency)
 				.IsUnicode(false);
 
-			modelBuilder.Entity<SystemParameter>()
+			modelBuilder.Entity<SystemParameters>()
 				.Property(e => e.PriceRate)
 				.HasPrecision(24, 12);
 
@@ -112,6 +112,16 @@ namespace AuctionHouse.Models
 				.HasMany(e => e.TokenOrders)
 				.WithRequired(e => e.User)
 				.HasForeignKey(e => e.Buyer);
+		}
+
+		public SystemParameters GetCurrentSystemParameters()
+		{
+			var query =
+				from parameters in SystemParameters
+				orderby parameters.ID descending
+				select parameters;
+
+			return query.FirstOrDefault();
 		}
 
 		public User FindUserById(Guid guid)

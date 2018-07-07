@@ -13,30 +13,28 @@ namespace AuctionHouse.Controllers
 		[HttpPost]
 		public string Register([Bind(Include = "FirstName,LastName,Email,Password")] User user)
 		{
+			if (!ModelState.IsValid)
+			{
+				foreach (var state in ModelState.Values)
+				{
+					foreach (var error in state.Errors)
+					{
+						return "#Error: " + error.ErrorMessage;
+					}
+				}
+
+				return "#Error: Unknown error.";
+			}
+
 			try
 			{
-				if (ModelState.IsValid)
-				{
-					user.ID = Guid.NewGuid();
-					user.Password = user.Password.ToMD5();
+				user.ID = Guid.NewGuid();
+				user.Password = user.Password.ToMD5();
 
-					db.Users.Add(user);
-					db.SaveChanges();
+				db.Users.Add(user);
+				db.SaveChanges();
 
-					return "Successfully registered!";
-				}
-				else
-				{
-					foreach (var state in ModelState.Values)
-					{
-						foreach (var error in state.Errors)
-						{
-							return "#Error: " + error.ErrorMessage;
-						}
-					}
-
-					return "#Error: Unknown error.";
-				}
+				return "Successfully registered!";
 			}
 			catch { return "#Error: Could not register. Email already in use."; }
 		}
@@ -97,14 +95,30 @@ namespace AuctionHouse.Controllers
 
 			if (!string.IsNullOrWhiteSpace(password))
 			{
-				user.Password = password.ToMD5();
+				user.Password = password;
 				sb.Append("Password,");
 			}
 
 			sb[sb.Length - 1] = ']';
-			
+
+			if (!ModelState.IsValid)
+			{
+				foreach (var state in ModelState.Values)
+				{
+					foreach (var error in state.Errors)
+					{
+						return "#Error: " + error.ErrorMessage;
+					}
+				}
+
+				return "#Error: Unknown error.";
+			}
+
+			user.Password = user.Password.ToMD5();
 			db.Entry(user).State = EntityState.Modified;
-			db.SaveChanges();
+
+			try { db.SaveChanges(); }
+			catch { return "#Error: One or more fields are not in a correct format (eg. invalid email)."; }
 
 			Session["user"] = user;
 			return sb.ToString();

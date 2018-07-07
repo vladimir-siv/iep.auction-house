@@ -111,10 +111,11 @@ else
 					</div>
 					<ul class="nav navbar-nav">
 						<li @if (ViewBag.navIndex == 0) { <text>class = "active"</text> }><a href="/Home/Index"><i class="glyphicon glyphicon-home"> Home</i></a></li>
-						<li @if (ViewBag.navIndex == 1) { <text>class = "active"</text> }><a href="subjects.html"><i class="glyphicon glyphicon-list-alt"> Subjects</i></a></li>
-						<li @if (ViewBag.navIndex == 2) { <text>class = "active"</text> }><a href="tutors.html"><i class="glyphicon glyphicon-education"> Tutors</i></a></li>
-						<li @if (ViewBag.navIndex == 3) { <text>class = "active"</text> }><a href="library.html"><i class="glyphicon glyphicon-briefcase"> Library</i></a></li>
-						<li @if (ViewBag.navIndex == 4) { <text>class = "active"</text> }><a href="/Home/About"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
+@if (Session["user"] != null)
+{
+						<li @if (ViewBag.navIndex == 1)	{ <text>class = "active"</text> }><a href="/Home/Auction"><i class="glyphicon glyphicon-list-alt"> Create auction</i></a></li>
+}
+						<li @if (ViewBag.navIndex == 2) { <text>class = "active"</text> }><a href="/Home/About"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
 					</ul>
 				</div>
 			</nav>

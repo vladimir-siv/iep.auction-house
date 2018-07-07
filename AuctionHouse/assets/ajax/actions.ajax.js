@@ -13,6 +13,32 @@ function stdResponsePopupHandler(popupid, response, reload = true)
 	if (reload) window.location.reload();
 }
 
+function stdResponseAlertHandler(response, reload = false)
+{
+	if (response.startsWith("#Error: "))
+	{
+		var error = new AlertPopupFeed(Alert.New("danger", response.substring(8), true, "modal"));
+		error.Subscribe(alertPopup);
+		error.Show(0);
+	}
+	else
+	{
+		var type = "success";
+		
+		if (response.startsWith("#Warning: "))
+		{
+			type = "warning";
+			response = response.substring(10);
+		}
+		
+		var message = new AlertPopupFeed(Alert.New(type, response, true, "modal"));
+		message.Subscribe(alertPopup);
+		message.Show(0);
+		
+		if (reload) window.location.reload();
+	}
+}
+
 /* =================== [/RESPONSE HANDLERS] =================== */
 
 
@@ -117,6 +143,55 @@ function changeAccountInfo(popupid, oldpassword, firstname, lastname, email, pas
 		data: { oldpassword : oldpassword, firstname : firstname, lastname : lastname, email : email, password : password },
 		dataType: "text",
 		success: function(response) { stdResponsePopupHandler(popupid, response); }
+	});
+}
+
+function createAuction(title, time, price, files)
+{
+	var invalidData = "<b>Error.</b>";
+	
+	if (title === "")
+	{
+		invalidData += "<br/>You must enter title!";
+	}
+	if (time === "")
+	{
+		invalidData += "<br/>You must enter time!";
+	}
+	if (price === "")
+	{
+		invalidData += "<br/>You must enter price!";
+	}
+	if (files[0].length === 0)
+	{
+		invalidData += "<br/>You must supply at least one picture!";
+	}
+	
+	if (invalidData !== "<b>Error.</b>")
+	{
+		var error = new AlertPopupFeed(Alert.New("danger", invalidData));
+		error.Subscribe(alertPopup);
+		error.Show(0);
+		return;
+	}
+	
+	var formData = new FormData();
+	
+	formData.append("title", title);
+	formData.append("time", time);
+	formData.append("price", price);
+	
+	$.each(files.prop("files"), function(index, file) { formData.append('+file-' + index, file, file.name); });
+	
+	$.ajax
+	({
+		url: "http://" + window.location.host + "/Auction/Create",
+		method: "POST",
+		data: data,
+		processData: false,
+		contentType: false,
+		dataType: "text",
+		success: function(response) { stdResponseAlertHandler(response); }
 	});
 }
 

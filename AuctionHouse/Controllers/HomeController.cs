@@ -19,20 +19,31 @@ namespace AuctionHouse.Controllers
 		}
 
 		[HttpGet]
-		public ActionResult ViewProfile(string userid)
+		public ActionResult Auction()
 		{
-			User user = null;
-			if (Guid.TryParse(userid, out var id)) user = db.FindUserById(id);
-			else user = Session["user"] as User;
-			if (user == null) user = Models.User.Dummy;
-			return View(user);
+			if (Session["user"] == null) return HttpNotFound();
+
+			ViewBag.navIndex = 1;
+			return View();
 		}
 
 		[HttpGet]
 		public ActionResult About()
 		{
-			ViewBag.navIndex = 4;
+			ViewBag.navIndex = 2;
 			return View();
+		}
+
+		[HttpGet]
+		public ActionResult ViewProfile(string userid)
+		{
+			if (Session["user"] == null) return HttpNotFound();
+
+			User user = null;
+			if (Guid.TryParse(userid, out var id)) user = db.FindUserById(id);
+			else user = Session["user"] as User;
+			if (user == null) user = Models.User.Dummy;
+			return View(user);
 		}
 	}
 }

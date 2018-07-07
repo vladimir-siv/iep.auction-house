@@ -6,7 +6,7 @@ namespace AuctionHouse.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class SystemParameter
+    public partial class SystemParameters
     {
         public Guid ID { get; set; }
 
