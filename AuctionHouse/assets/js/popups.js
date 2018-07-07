@@ -137,7 +137,7 @@ class Alert
 	}
 }
 
-$(document).ready(function()
+doc.ready(function()
 {
 	$('[data-toggle="popover"]').popover();
 });
