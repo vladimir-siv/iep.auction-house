@@ -70,7 +70,7 @@ class AuctionPartialViewModel extends DynamicViewModel
 	{
 		return super.AsView() +
 			"<article id=\"auction-" + this.guid + "\" style=\"width: 20%;\" class=\"border-boxed d-inline-block solid-border border-sm border-gray margin-sm font-times-new-roman padding-bottom-sm\">" +
-				"<div class=\"border-boxed expanded solid-border-bottom border-sm border-bottom-gray text-center\">" +
+				"<div class=\"border-boxed expanded solid-border-bottom border-bottom-sm border-bottom-gray text-center\">" +
 					"<h4><a class=\"hover-text-decor-none\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">" + this.title + "</a></h4>" +
 				"</div>" +
 				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-sm\" width=\"100%\" height=\"150\" />" +
@@ -112,7 +112,7 @@ class AuctionApprovalViewModel extends ViewModel
 	{
 		return super.AsView() +
 			"<article id=\"auction-" + this.guid + "\" style=\"width: 20%;\" class=\"border-boxed d-inline-block solid-border border-sm border-gray margin-sm font-times-new-roman padding-bottom-sm\">" +
-				"<div class=\"border-boxed expanded solid-border-bottom border-sm border-bottom-gray text-center\">" +
+				"<div class=\"border-boxed expanded solid-border-bottom border-bottom-sm border-bottom-gray text-center\">" +
 					"<h4><a class=\"hover-text-decor-none\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">" + this.title + "</a></h4>" +
 				"</div>" +
 				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-sm\" width=\"100%\" height=\"150\" />" +

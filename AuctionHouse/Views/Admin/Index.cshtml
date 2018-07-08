@@ -13,7 +13,7 @@
 		[
 			@foreach (var auction in Model)
 			{
-				@:new AuctionApprovalViewModel("@auction.ID.ToString()", "@auction.Title", @auction.AuctionTime, @auction.StartingPrice, "@auction.CreatedOn.ToString("dd.MM.yyyy. HH:mm:ss")", "@auction.User.FirstName @auction.User.LastName"),
+				@:new AuctionApprovalViewModel("@auction.ID.ToString()", "@auction.Title", @auction.AuctionTime, @auction.StartingPrice, "@auction.CreatedOn.ToString(Settings.DateTimeFormat)", "@auction.User.FirstName @auction.User.LastName"),
 			}
 		];
 

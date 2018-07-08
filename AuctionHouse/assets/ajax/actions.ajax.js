@@ -23,19 +23,21 @@ function stdResponseAlertHandler(response, location = null)
 	}
 	else
 	{
-		var type = "success";
-		
-		if (response.startsWith("#Warning: "))
+		if (location === null)
 		{
-			type = "warning";
-			response = response.substring(10);
-		}
+			var type = "success";
 		
-		var message = new AlertPopupFeed(Alert.New(type, response, true, "modal"));
-		message.Subscribe(alertPopup);
-		message.Show(0);
-
-		if (location !== null)
+			if (response.startsWith("#Warning: "))
+			{
+				type = "warning";
+				response = response.substring(10);
+			}
+			
+			var message = new AlertPopupFeed(Alert.New(type, response, true, "modal"));
+			message.Subscribe(alertPopup);
+			message.Show(0);
+		}
+		else
 		{
 			if (location === "") window.location.reload();
 			else window.location.replace(location);
@@ -162,7 +164,7 @@ function createAuction(title, time, price, files)
 	}
 	if (time === "")
 	{
-		invalidData += "<br/>You must enter time!";
+		time = -1;
 	}
 	if (price === "")
 	{
@@ -188,7 +190,7 @@ function createAuction(title, time, price, files)
 	formData.append("price", price);
 	
 	$.each(files, function(index, file) { formData.append('+file-' + index, file, file.name); });
-
+	
 	$.ajax
 	({
 		url: "http://" + window.location.host + "/Auction/Create",

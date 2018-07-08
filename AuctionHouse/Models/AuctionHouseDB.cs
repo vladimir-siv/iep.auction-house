@@ -209,5 +209,16 @@ namespace AuctionHouse.Models
 
 			return query.ToList();
 		}
+
+		public IEnumerable<Bid> FindAuctionBids(Auction auction)
+		{
+			var query =
+				from bid in Bids
+				where bid.Auction == auction.ID
+				orderby bid.BidOn descending
+				select bid;
+
+			return query.ToList();
+		}
 	}
 }

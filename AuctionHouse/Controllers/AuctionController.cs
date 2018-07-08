@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Web.Mvc;
 using System.IO;
 using AuctionHouse.Models;
@@ -16,6 +17,29 @@ namespace AuctionHouse.Controllers
 			if (!Guid.TryParse(id, out var guid)) return HttpNotFound();
 			var auction = db.FindAuctionById(guid);
 			if (auction == null) return HttpNotFound();
+
+			var bids = (List<Bid>)db.FindAuctionBids(auction);
+
+			var images = new List<string>(16);
+			var path = "/assets/storage/auctions/" + auction.ID.ToString() + "/";
+			foreach (var file in Directory.EnumerateFiles(Server.MapPath("~" + path)))
+			{
+				if (file.EndsWith(".png"))
+				{
+					images.Add(path + Path.GetFileName(file));
+				}
+			}
+
+			ViewBag.ImageSources = images;
+
+			ViewBag.Bids = bids;
+			if (bids.Count > 0)
+			{
+				ViewBag.Bidder = bids[0].User;
+				ViewBag.CurrentPrice = bids[0].Amount;
+			}
+			else ViewBag.CurrentPrice = auction.StartingPrice;
+
 			return View(auction);
 		}
 		

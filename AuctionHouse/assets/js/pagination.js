@@ -36,7 +36,7 @@ function initPagination()
 	var pagination_pages = Math.floor(articles.length / per_page);
 	if (articles.length % per_page !== 0) ++pagination_pages;
 
-	if (pagination_pages == 0) pagination_pages = 1;
+	if (pagination_pages === 0) pagination_pages = 1;
 
 	pagination_list.html("");
 	for (var i = 1; i <= pagination_pages; ++i)
