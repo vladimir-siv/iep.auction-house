@@ -5,6 +5,8 @@ using System.IO;
 using AuctionHouse.Models;
 using System.Data.Entity;
 
+using System.Linq;
+
 namespace AuctionHouse.Controllers
 {
     public class AuctionController : Controller
@@ -18,7 +20,11 @@ namespace AuctionHouse.Controllers
 			var auction = db.FindAuctionById(guid);
 			if (auction == null) return HttpNotFound();
 
-			var bids = (List<Bid>)db.FindAuctionBids(auction);
+			if (auction.OpenedOn == null &&
+				(!(bool)Session["isAdmin"] && ((User)Session["user"]).ID != auction.Holder))
+			{
+				return HttpNotFound();
+			}
 
 			var images = new List<string>(16);
 			var path = "/assets/storage/auctions/" + auction.ID.ToString() + "/";
@@ -29,14 +35,14 @@ namespace AuctionHouse.Controllers
 					images.Add(path + Path.GetFileName(file));
 				}
 			}
-
+			
 			ViewBag.ImageSources = images;
-
-			ViewBag.Bids = bids;
-			if (bids.Count > 0)
+			
+			var lastBid = auction.LastBid;
+			if (lastBid != null)
 			{
-				ViewBag.Bidder = bids[0].User;
-				ViewBag.CurrentPrice = bids[0].Amount;
+				ViewBag.Bidder = lastBid.User;
+				ViewBag.CurrentPrice = lastBid.Amount;
 			}
 			else ViewBag.CurrentPrice = auction.StartingPrice;
 
@@ -70,7 +76,7 @@ namespace AuctionHouse.Controllers
 
 			if (uploadFailed) return "#Error: You must supply at least one image.";
 			
-			Auction auction = new Auction
+			var auction = new Auction
 			{
 				ID = guid,
 				Title = title,
@@ -128,6 +134,66 @@ namespace AuctionHouse.Controllers
 			catch { return "#Error: Could not manage auction."; }
 
 			return "Auction successfully managed.";
+		}
+
+		[HttpPost]
+		public string Bid(string guid, decimal amount)
+		{
+			var user = Session["user"] as User;
+			if (user == null) return "#Error: Please, log in!";
+
+			if (!Guid.TryParse(guid, out var id)) return "#Error: Invalid guid.";
+			var auction = db.FindAuctionById(id);
+			if (auction == null) return "#Error: Auction does not exist (to bid on such).";
+
+			if (auction.OpenedOn == null) return "#Error: Auction is not opened yet.";
+
+			if (auction.CompletedOn != null || DateTime.Now >= auction.OpenedOn.Value.AddSeconds(auction.AuctionTime))
+			{
+				return "#Error: Auctions is closed.";
+			}
+
+			if (auction.Holder == user.ID) return "#Error: Cannot bid on owning auction.";
+
+			var lastBid = auction.LastBid;
+			if (lastBid != null)
+			{
+				if (amount <= lastBid.Amount) return "#Error: Cannot bid with lower price than current.";
+			}
+			else
+			{
+				if (amount <= auction.StartingPrice) return "#Error: Cannot bid with lower price than current.";
+			}
+
+			if (user.Balance < amount) return "#Error: Insufficient funds.";
+
+			if (lastBid != null)
+			{
+				lastBid.User.Balance += lastBid.Amount;
+				db.Entry(lastBid.User).State = EntityState.Modified;
+			}
+
+			user = db.FindUserById(user.ID);
+			user.Balance -= amount;
+			db.Entry(user).State = EntityState.Modified;
+
+			var bid = new Bid
+			{
+				ID = Guid.NewGuid(),
+				Bidder = user.ID,
+				Auction = auction.ID,
+				BidOn = DateTime.Now,
+				Amount = amount
+			};
+
+			try
+			{
+				db.Bids.Add(bid);
+				db.SaveChanges();
+			}
+			catch { return "#Error: Unable to register bid."; }
+
+			return "Bidding successful.";
 		}
 	}
 }

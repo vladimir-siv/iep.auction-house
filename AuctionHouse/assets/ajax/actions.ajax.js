@@ -215,4 +215,24 @@ function manageAuction(guid, approve)
 	});
 }
 
+function bid(guid, amount)
+{
+	if (isNaN(parseFloat(amount)))
+	{
+		var error = new AlertPopupFeed(Alert.New("danger", "<b>Error:</b> Amount of tokens must be a number!"));
+		error.Subscribe(alertPopup);
+		error.Show(0);
+		return;
+	}
+	
+	$.ajax
+	({
+		url: "http://" + window.location.host + "/Auction/Bid",
+		method: "POST",
+		data: { guid : guid, amount : amount },
+		dataType: "text",
+		success: function (response) { stdResponseAlertHandler(response); }
+	});
+}
+
 /* =================== [/ACTIONS] =================== */

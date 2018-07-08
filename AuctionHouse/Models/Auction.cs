@@ -42,5 +42,7 @@ namespace AuctionHouse.Models
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bid> Bids { get; set; }
+
+		public Bid LastBid { get { return Bids.Best((bid1, bid2) => bid1.BidOn > bid2.BidOn ? bid1 : bid2); } }
     }
 }

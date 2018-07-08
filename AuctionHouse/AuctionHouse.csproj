@@ -193,6 +193,7 @@
     <Content Include="assets\css\layout.css" />
     <Content Include="assets\css\stylization.css" />
     <Content Include="assets\css\utility.css" />
+    <Content Include="assets\js\auction.js" />
     <Content Include="assets\js\auctions.js" />
     <Content Include="assets\js\config.js" />
     <Content Include="assets\js\filters.js" />

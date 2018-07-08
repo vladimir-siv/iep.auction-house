@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AuctionHouse
 {
@@ -32,6 +33,23 @@ namespace AuctionHouse
 			DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 			TimeSpan diff = date.ToUniversalTime() - origin;
 			return diff.TotalMilliseconds;
+		}
+	}
+
+	public class DateTimeComparer : IComparer<DateTime>
+	{
+		public static DateTimeComparer Ascending { get; } = new DateTimeComparer(true);
+		public static DateTimeComparer Descending { get; } = new DateTimeComparer(false);
+
+		private bool isAscending;
+
+		private DateTimeComparer(bool isAscending) { this.isAscending = isAscending; }
+
+		public int Compare(DateTime x, DateTime y)
+		{
+			if (x == y) return 0;
+			if (isAscending) return x > y ? 1 : -1;
+			else return x < y ? 1 : -1;
 		}
 	}
 }

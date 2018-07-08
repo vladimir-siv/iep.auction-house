@@ -13,14 +13,7 @@ class AuctionPartialViewModel extends DynamicViewModel
 	
 	GetFormattedTime()
 	{
-		var seconds = this.timeleft;
-		
-		var hours = Math.floor(seconds / 3600);
-		seconds = seconds % 3600;
-		var minutes = Math.floor(seconds / 60);
-		seconds = seconds % 60;
-		
-		return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+		return time_format(this.timeleft);
 	}
 	
 	Setup()
@@ -98,14 +91,7 @@ class AuctionApprovalViewModel extends ViewModel
 
 	GetFormattedTime()
 	{
-		var seconds = this.timeleft;
-
-		var hours = Math.floor(seconds / 3600);
-		seconds = seconds % 3600;
-		var minutes = Math.floor(seconds / 60);
-		seconds = seconds % 60;
-
-		return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+		return time_format(this.timeleft);
 	}
 
 	AsView()

@@ -1,6 +1,25 @@
 ﻿@model AuctionHouse.Models.Auction
 @{ViewBag.Title = "Auction";}
 
+@section scripts
+{
+	@Scripts.Render("~/assets/js/auction.js")
+}
+
+@section addition
+{
+	<script type="text/javascript">
+@if (Model.OpenedOn == null)
+{
+		<text>timeleft = @Model.AuctionTime; timeout = false;</text>
+}
+else
+{
+		<text>timeleft = parseInt((@(Model.OpenedOn.Value.AddSeconds(Model.AuctionTime).ToUnixTimestamp()) - Date.now()) / 1000);</text>
+}
+	</script>
+}
+
 <section id="auction" class="border-boxed expanded solid-border border-sm border-gray margin-sm font-times-new-roman">
 	<div class="jumbotron text-center">
 		<h1>@Model.Title</h1>
@@ -25,7 +44,7 @@
 				</tr>
 				<tr>
 					<td>Time left:</td>
-					<td data-dynamic="timeleft" style="color: deepskyblue;"><b>@Model.AuctionTime</b></td>
+					<td data-dynamic="timeleft" style="color: deepskyblue;"><b></b></td>
 				</tr>
 				<tr>
 					<td>Currency:</td>
@@ -44,7 +63,7 @@
 }
 else
 {
-						<b>No bidders yet . . .</b>						
+						<b>No bidders</b>						
 }
 					</td>
 				</tr>
@@ -79,7 +98,7 @@ else
 					</td>
 				</tr>
 				<tr>
-					<td><button type="button" class="btn btn-primary btn-sm" onclick="alert("Bidding...");">Bid</button></td>
+					<td><button type="button" class="btn btn-primary btn-sm" onclick="bid('@Model.ID.ToString()', $('input#bid-amount')[0].value);">Bid</button></td>
 					<td><input id="bid-amount" type="text" class="form-control" name="bid-amount" value="@((ViewBag.CurrentPrice + 1).ToString(Settings.DecimalFormat))" placeholder="Amount (in tokens)" /></td>
 				</tr>
 			</table>
@@ -96,7 +115,7 @@ else
 				</tr>
 			</table>
 			<table data-dynamic="bids" class="table table-striped font-times-new-roman">
-@foreach (AuctionHouse.Models.Bid bid in ViewBag.Bids)
+@foreach (AuctionHouse.Models.Bid bid in Model.Bids.OrderBy(bid => bid.BidOn, DateTimeComparer.Descending))
 {
 				<tr>
 					<td><b><a class="hover-text-decor-none" href="/Home/ViewProfile?id=@bid.Bidder">@bid.User.FirstName @bid.User.LastName</a></b></td>
