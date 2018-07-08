@@ -194,8 +194,10 @@
     <Content Include="assets\css\utility.css" />
     <Content Include="assets\js\auctions.js" />
     <Content Include="assets\js\config.js" />
+    <Content Include="assets\js\filters.js" />
     <Content Include="assets\js\pagination.js" />
     <Content Include="assets\js\popups.js" />
+    <Content Include="assets\js\events.js" />
     <Content Include="assets\js\views.js" />
     <Content Include="assets\res\accept.png" />
     <Content Include="assets\res\avatar.png" />
@@ -206,7 +208,6 @@
     <Content Include="assets\res\reject.png" />
     <Content Include="assets\res\seen.png" />
     <Content Include="assets\res\unseen.png" />
-    <Content Include="assets\storage\auctions\237598237968\0.png" />
     <Content Include="assets\style-js\fixed-dynamic.style.js" />
     <Content Include="assets\style-js\utility.style.js" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -297,6 +298,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="assets\storage\auctions\" />
     <Folder Include="Views\Account\" />
   </ItemGroup>
   <ItemGroup>

@@ -71,7 +71,7 @@ class AuctionPartialViewModel extends DynamicViewModel
 		return super.AsView() +
 			"<article id=\"auction-" + this.guid + "\" style=\"width: 20%;\" class=\"border-boxed d-inline-block solid-border border-sm border-gray margin-sm font-times-new-roman padding-bottom-sm\">" +
 				"<div class=\"border-boxed expanded solid-border-bottom border-sm border-bottom-gray text-center\">" +
-					"<h4>" + this.title + "</h4>" +
+					"<h4><a class=\"hover-text-decor-none\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">" + this.title + "</a></h4>" +
 				"</div>" +
 				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-sm\" width=\"100%\" height=\"150\" />" +
 				"<p data-dynamic=\"timeleft\" class=\"no-margin\" style=\"color: deepskyblue;\">" + this.GetFormattedTime() + "</p>" +
@@ -113,31 +113,173 @@ class AuctionApprovalViewModel extends ViewModel
 		return super.AsView() +
 			"<article id=\"auction-" + this.guid + "\" style=\"width: 20%;\" class=\"border-boxed d-inline-block solid-border border-sm border-gray margin-sm font-times-new-roman padding-bottom-sm\">" +
 				"<div class=\"border-boxed expanded solid-border-bottom border-sm border-bottom-gray text-center\">" +
-					"<h4>" + this.title + "</h4>" +
+					"<h4><a class=\"hover-text-decor-none\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">" + this.title + "</a></h4>" +
 				"</div>" +
 				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-sm\" width=\"100%\" height=\"150\" />" +
 				"<p class=\"no-margin\" style=\"color: deepskyblue;\">" + this.GetFormattedTime() + "</p>" +
 				"<p class=\"no-margin\" style=\"color: green\">" + this.price + "t</p>" +
 				"<p class=\"no-margin\">" + this.createdon + "</p>" +
 				"<p class=\"no-margin\">" + this.holder + "</p>" +
-				"<a class=\"btn btn-primary btn-sm\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">Manage</a>" +
+				"<button type=\"button\" class=\"btn btn-success btn-sm\" onclick=\"manageAuction('" + this.guid + "', true);\">Approve</button>&emsp;" +
+				"<button type=\"button\" class=\"btn btn-danger btn-sm\" onclick=\"manageAuction('" + this.guid + "', false);\">Reject</button>" +
 			"</article>";
 	}
 }
 
-var auctions;
+/* =================== [\INIT] =================== */
+
+var auctions = []; // Array of DynamicViewModels to display, server should feed this array
+var dynamics = true; // Should timer refresh the time of auctions each second, server may feed this value
+
+var filter = new XFilter();
 
 doc.ready(function()
 {
-	if (typeof auctions === "undefined") auctions = [];
-	if (auctions.length > 0) setInterval(refreshTimings, 1000);
+	filter.reg(titleFilter);
+	filter.reg(priceFilter);
+	filter.reg(stateFilter);
+
+	auctions.reverse();
+
+	var filtered = [];
+	for (var i = auctions.length - 1; i >= 0; --i)
+	{
+		if (dynamics) auctions[i].DynamicPropChanged.reg(auctionPropChanged);
+
+		if (filter.check(auctions[i]))
+		{
+			filtered.push(auctions[i]);
+		}
+	}
+
+	setPaginationArticles(filtered);
+
+	if (dynamics) setInterval(refreshTimings, 1000);
 });
 
 function refreshTimings()
 {
-	for (var i = 0; i < auctions.length; ++i)
+	for (var i = auctions.length - 1; i >= 0; --i)
 	{
 		if (auctions[i].timeleft === 1) auctions[i].SetAction("Bid now", false);
 		if (auctions[i].timeleft > 0) auctions[i].SetTimeleft(auctions[i].timeleft - 1);
 	}
+
+	onFilteringNeeded();
 }
+
+/* =================== [/INIT] =================== */
+
+
+/* =================== [\EVENT HANDLING] =================== */
+
+function auctionPropChanged(auction, property)
+{
+	if (property.name === "price")
+	{
+		onFilteringNeeded();
+	}
+}
+
+function onFilteringNeeded()
+{
+	var filtered = applyFilter();
+	setPaginationArticles(filtered);
+}
+
+/* =================== [/EVENT HANDLING] =================== */
+
+
+/* =================== [\LOGIC FUNCTIONS] =================== */
+
+function appendAuction(auction)
+{
+	auctions.push(auction);
+	if (dynamics) auction.DynamicPropChanged.reg(auctionPropChanged);
+
+	onFilteringNeeded();
+}
+
+function removeAuction(auction)
+{
+	var index = auctions.indexOf(auction);
+	if (index >= 0)
+	{
+		if (dynamics) auction.DynamicPropChanged.unreg(auctionPropChanged);
+		auctions.splice(index, 1);
+
+		onFilteringNeeded();
+	}
+}
+
+function applyFilter()
+{
+	var filtered = [];
+	for (var i = auctions.length - 1; i >= 0; --i)
+	{
+		if (filter.check(auctions[i]))
+		{
+			filtered.push(auctions[i]);
+		}
+	}
+
+	return filtered;
+}
+
+/* =================== [/LOGIC FUNCTIONS] =================== */
+
+
+/* =================== [\FILTERS] =================== */
+
+var titles = [];
+function titleFilter(auction)
+{
+	if (titles.length === 0) return true;
+
+	for (var i = 0; i < titles.length; ++i)
+	{
+		if (auction.title.toLowerCase().indexOf(titles[i].toLowerCase()) !== -1)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+var minprice = -1, maxprice = -1;
+function priceFilter(auction)
+{
+	if (minprice >= 0 && auction.price < minprice) return false;
+	if (maxprice >= 0 && auction.price > maxprice) return false;
+	return true;
+}
+
+var opened = true, completed = true;
+function stateFilter(auction)
+{
+	if (opened && auction.timeleft > 0) return true;
+	if (completed && auction.timeleft === 0) return true;
+	return false;
+}
+
+function setFilters(newtitles, newminprice, newmaxprice, newopened, newcompleted)
+{
+	titles = newtitles;
+	minprice = newminprice;
+	maxprice = newmaxprice;
+	opened = newopened;
+	completed = newcompleted;
+	onFilteringNeeded();
+}
+function removeFilters()
+{
+	titles = [];
+	minprice = -1;
+	maxprice = -1;
+	opened = true;
+	completed = true;
+	onFilteringNeeded();
+}
+
+/* =================== [/FILTERS] =================== */

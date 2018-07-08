@@ -8,7 +8,9 @@ class DynamicViewModel extends ViewModel
 	constructor()
 	{
 		super();
-		
+
+		this.DynamicPropChanged = new XEvent();
+
 		this.holder = null;
 		this.dynamic = {};
 		this.setupNeeded = false;
@@ -43,6 +45,7 @@ class DynamicViewModel extends ViewModel
 		var component = this.dynamic[type + "-" + name];
 		if (typeof component === "undefined") return null;
 		component.html(value);
+		this.DynamicPropChanged.fire(this, { type: type, name: name, value: value });
 		return component;
 	}
 	

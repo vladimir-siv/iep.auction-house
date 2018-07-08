@@ -9,7 +9,7 @@
 @section addition
 {
 	<script type="text/javascript">
-		auctions = articles =
+		auctions =
 		[
 			@foreach (var auction in Model)
 			{
@@ -22,13 +22,79 @@
 }
 
 <section id="pagination" class="border-boxed expanded solid-border border-xs border-gray edged margin-top-lg margin-bottom-lg">
-	<div class="row solid-border-bottom border-bottom-xs border-bottom-gray edged no-margin-left no-margin-right text-center">
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 solid-border-right border-right-xs border-right-gray edged padding-top-xs">
 
+	<!-- \FILTERS -->
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<button type="button" data-toggle="collapse" data-target="section#pagination div#filters" class="form-control edged no-margin no-padding" style="height: 8px;" aria-expanded="false" aria-controls="filters"></button>
 		</div>
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 solid-border-left border-left-xs border-left-gray edged padding-top-xs">
+	</div>
+	<div id="filters" class="collapse row solid-border-bottom border-bottom-xs border-bottom-gray edged no-margin-left no-margin-right text-center">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-xs">
+
+			<input id="auction-title" type="text" class="form-control" name="auction-title" placeholder="Title (eg. Samsung S7 Edge - seperate by ';')">
+			<br />
+			<input id="auction-min-price" type="text" class="form-control d-inline-block" style="width: 45%" name="auction-min-price" placeholder="Minimum price (eg. 35.10)">
+			<input id="auction-max-price" type="text" class="form-control d-inline-block" style="width: 45%" name="auction-max-price" placeholder="Maximum price (eg. 70.20)">
+			<br />
+			&emsp;Opened <input id="auction-opened" type="checkbox" name="auction-opened" value="Opened" checked>
+			<input id="auction-completed" type="checkbox" name="auction-completed" checked> Completed
+			<br />
+			<input id="apply-filter" type="button" class="form-control d-inline-block" style="width: 30%;" name="apply-filter" value="Apply Filter" onclick="apply();">
+			<input id="reset-filter" type="button" class="form-control d-inline-block" style="width: 30%;" name="reset-filter" value="Reset Filter" onclick="reset();">
+
+			<script type="text/javascript">
+
+				var filters = $("div#filters");
+				var f_titles = filters.find("input#auction-title");
+				var f_minprice = filters.find("input#auction-min-price");
+				var f_maxprice = filters.find("input#auction-max-price");
+				var f_opened = filters.find("input#auction-opened");
+				var f_completed = filters.find("input#auction-completed");
+
+				function apply()
+				{
+					if (f_titles[0].value !== "")
+					{
+						titles = f_titles[0].value.split(";");
+						for (var i = 0; i < titles.length; ++i)
+						{
+							titles[i] = titles[i].trim();
+						}
+					}
+					else titles = [];
+
+					minprice = parseInt(f_minprice[0].value);
+					if (isNaN(minprice)) minprice = -1;
+
+					maxprice = parseInt(f_maxprice[0].value);
+					if (isNaN(maxprice)) maxprice = -1;
+
+					opened = f_opened[0].checked;
+					completed = f_completed[0].checked;
+
+					onFilteringNeeded();
+				}
+
+				function reset()
+				{
+					f_titles[0].value = "";
+					f_minprice[0].value = "";
+					f_maxprice[0].value = "";
+					f_opened[0].checked = true;
+					f_completed[0].checked = true;
+					removeFilters();
+				}
+
+			</script>
+		</div>
+	</div>
+	<!-- /FILTERS -->
+
+	<div id="article-list" class="border-boxed expanded padding-sm text-center"></div>
+	<div class="row solid-border-top border-top-xs border-top-gray edged no-margin-left no-margin-right text-center">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 padding-top-xs">
 			<ul id="pagination-list" class="pagination no-margin"></ul>
 		</div>
 	</div>
-	<div id="article-list" class="border-boxed expanded padding-sm text-center"></div>
 </section>
