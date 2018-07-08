@@ -119,6 +119,7 @@ else
 @if (Session["user"] != null && (bool)Session["isAdmin"])
 {
 						<li @if (ViewBag.NavIndex == 3) { <text>class="active"</text> }><a href="/Admin/Index"><i class="glyphicon glyphicon-hand-up"> Approve</i></a></li>
+						<li @if (ViewBag.NavIndex == 4) { <text>class="active"</text> }><a href="/Admin/System"><i class="glyphicon glyphicon-stats"> System</i></a></li>
 }
 					</ul>
 				</div>

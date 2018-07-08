@@ -127,10 +127,9 @@ namespace AuctionHouse.Models
 		{
 			var query =
 				from parameters in SystemParameters
-				orderby parameters.ID descending
 				select parameters;
 
-			return query.FirstOrDefault();
+			return query.SingleOrDefault();
 		}
 
 		public User FindUserById(Guid guid)

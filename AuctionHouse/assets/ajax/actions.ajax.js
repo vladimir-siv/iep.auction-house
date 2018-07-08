@@ -235,4 +235,16 @@ function bid(guid, amount)
 	});
 }
 
+function changeSystem(recentauctions, defaultauctiontime, silverpackage, goldpackage, platinumpackage, currency, pricerate)
+{
+	$.ajax
+	({
+		url: "http://" + window.location.host + "/Admin/ChangeSystem",
+		method: "POST",
+		data: { RecentAuctions : recentauctions, DefaultAuctionTime : defaultauctiontime, SilverPackage : silverpackage, GoldPackage : goldpackage, PlatinumPackage : platinumpackage, Currency : currency, PriceRate : pricerate },
+		dataType: "text",
+		success: function (response) { stdResponseAlertHandler(response); }
+	});
+}
+
 /* =================== [/ACTIONS] =================== */
