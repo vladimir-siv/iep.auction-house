@@ -9,11 +9,11 @@
 @section addition
 {
 	<script type="text/javascript">
-		auctions = articles =
+		articles =
 		[
 			@foreach (var auction in Model)
 			{
-				@:new AuctionPartialViewModel("@auction.ID.ToString()", "@auction.Title", parseInt((@(auction.OpenedOn.Value.AddSeconds(auction.AuctionTime).ToUnixTimestamp()) - Date.now()) / 1000), @auction.StartingPrice, "@auction.User.FirstName @auction.User.LastName"),
+				@:new AuctionApprovalViewModel("@auction.ID.ToString()", "@auction.Title", @auction.AuctionTime, @auction.StartingPrice, "@auction.CreatedOn.ToString("dd.MM.yyyy. HH:mm:ss")", "@auction.User.FirstName @auction.User.LastName"),
 			}
 		];
 

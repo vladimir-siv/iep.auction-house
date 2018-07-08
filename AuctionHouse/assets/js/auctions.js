@@ -6,7 +6,7 @@ class AuctionPartialViewModel extends DynamicViewModel
 		
 		this.guid = guid;
 		this.title = title;
-		this.timeleft = timeleft;
+		this.timeleft = timeleft < 0 ? 0 : timeleft;
 		this.price = price;
 		this.bidder = bidder;
 	}
@@ -20,7 +20,7 @@ class AuctionPartialViewModel extends DynamicViewModel
 		var minutes = Math.floor(seconds / 60);
 		seconds = seconds % 60;
 		
-		return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2)
+		return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
 	}
 	
 	Setup()
@@ -73,11 +73,54 @@ class AuctionPartialViewModel extends DynamicViewModel
 				"<div class=\"border-boxed expanded solid-border-bottom border-sm border-bottom-gray text-center\">" +
 					"<h4>" + this.title + "</h4>" +
 				"</div>" +
-				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-top-sm padding-bottom-sm\" width=\"100%\" height=\"150\" />" +
+				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-sm\" width=\"100%\" height=\"150\" />" +
 				"<p data-dynamic=\"timeleft\" class=\"no-margin\" style=\"color: deepskyblue;\">" + this.GetFormattedTime() + "</p>" +
 				"<p data-dynamic=\"price\" class=\"no-margin\" style=\"color: green\">" + this.price + "t</p>" +
 				"<p data-dynamic=\"bidder\" class=\"no-margin\">" + this.bidder + "</p>" +
-				"<a data-dynamic=\"action\" href=\"#\" class=\"btn btn-primary btn-sm\">Bid now</a>" +
+				"<a data-dynamic=\"action\" class=\"btn btn-primary btn-sm" + (this.timeleft > 0 ? "" : " disabled") + "\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">Bid now</a>" +
+			"</article>";
+	}
+}
+
+class AuctionApprovalViewModel extends ViewModel
+{
+	constructor(guid, title, timeleft, price, createdon, holder)
+	{
+		super();
+
+		this.guid = guid;
+		this.title = title;
+		this.timeleft = timeleft < 0 ? 0 : timeleft;
+		this.price = price;
+		this.createdon = createdon;
+		this.holder = holder;
+	}
+
+	GetFormattedTime()
+	{
+		var seconds = this.timeleft;
+
+		var hours = Math.floor(seconds / 3600);
+		seconds = seconds % 3600;
+		var minutes = Math.floor(seconds / 60);
+		seconds = seconds % 60;
+
+		return ("0" + hours).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+	}
+
+	AsView()
+	{
+		return super.AsView() +
+			"<article id=\"auction-" + this.guid + "\" style=\"width: 20%;\" class=\"border-boxed d-inline-block solid-border border-sm border-gray margin-sm font-times-new-roman padding-bottom-sm\">" +
+				"<div class=\"border-boxed expanded solid-border-bottom border-sm border-bottom-gray text-center\">" +
+					"<h4>" + this.title + "</h4>" +
+				"</div>" +
+				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-sm\" width=\"100%\" height=\"150\" />" +
+				"<p class=\"no-margin\" style=\"color: deepskyblue;\">" + this.GetFormattedTime() + "</p>" +
+				"<p class=\"no-margin\" style=\"color: green\">" + this.price + "t</p>" +
+				"<p class=\"no-margin\">" + this.createdon + "</p>" +
+				"<p class=\"no-margin\">" + this.holder + "</p>" +
+				"<a class=\"btn btn-primary btn-sm\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">Manage</a>" +
 			"</article>";
 	}
 }
@@ -87,7 +130,7 @@ var auctions;
 doc.ready(function()
 {
 	if (typeof auctions === "undefined") auctions = [];
-	setInterval(refreshTimings, 1000);
+	if (auctions.length > 0) setInterval(refreshTimings, 1000);
 });
 
 function refreshTimings()

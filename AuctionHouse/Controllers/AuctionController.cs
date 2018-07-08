@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using AuctionHouse.Models;
+using System.Data.Entity;
 
 namespace AuctionHouse.Controllers
 {
@@ -13,9 +13,12 @@ namespace AuctionHouse.Controllers
 		[HttpGet]
 		public ActionResult Show(string id)
 		{
-			return View();
+			if (!Guid.TryParse(id, out var guid)) return HttpNotFound();
+			var auction = db.FindAuctionById(guid);
+			if (auction == null) return HttpNotFound();
+			return View(auction);
 		}
-
+		
 		[HttpPost]
 		public string Create(string title, int time, decimal price)
 		{
@@ -65,6 +68,42 @@ namespace AuctionHouse.Controllers
 			catch { return "#Error: Could not create the auction. Some of the values are invalid."; }
 
 			return auction.ID.ToString();
+		}
+
+		[HttpPost]
+		public string Manage(string guid, bool approve)
+		{
+			if (Session["user"] == null || !(bool)Session["isAdmin"]) return "";
+
+			if (string.IsNullOrWhiteSpace(guid) || !Guid.TryParse(guid, out var id))
+			{
+				return "#Error: Invalid auction id.";
+			}
+
+			var auction = db.FindAuctionById(id);
+
+			if (auction == null)
+			{
+				return "#Error: Could not find auction with such id.";
+			}
+
+			if (auction.OpenedOn != null)
+			{
+				return "#Error: Auction was already managed.";
+			}
+
+			auction.OpenedOn = DateTime.Now;
+			if (!approve)
+			{
+				auction.CompletedOn = auction.OpenedOn;
+			}
+
+			db.Entry(auction).State = EntityState.Modified;
+
+			try { db.SaveChanges(); }
+			catch { return "#Error: Could not manage auction."; }
+
+			return "Auction successfully managed.";
 		}
 	}
 }

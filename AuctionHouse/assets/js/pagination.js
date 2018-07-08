@@ -13,7 +13,7 @@ doc.ready(function()
 	article_list = pagination_section.find("div#article-list");
 	
 	var pagination_pages = articles.length / per_page;
-	if (articles.length % per_page != 0) ++pagination_pages;
+	if (articles.length % per_page !== 0) ++pagination_pages;
 	
 	for (var i = 1; i <= pagination_pages; i++)
 	{
@@ -25,7 +25,7 @@ doc.ready(function()
 
 function activatePage(page)
 {
-	if (page == active) return;
+	if (page === active) return;
 	
 	article_list.html("");
 	

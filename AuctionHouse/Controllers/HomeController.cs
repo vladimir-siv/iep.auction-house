@@ -14,8 +14,9 @@ namespace AuctionHouse.Controllers
 		[HttpGet]
 		public ActionResult Index()
 		{
-			ViewBag.navIndex = 0;
-			return View();
+			ViewBag.NavIndex = 0;
+			ViewBag.RecentAuctions = db.GetCurrentSystemParameters().RecentAuctions;
+			return View(db.FindActiveAndCompletedAuctions());
 		}
 
 		[HttpGet]
@@ -23,14 +24,14 @@ namespace AuctionHouse.Controllers
 		{
 			if (Session["user"] == null) return HttpNotFound();
 
-			ViewBag.navIndex = 1;
+			ViewBag.NavIndex = 1;
 			return View();
 		}
 
 		[HttpGet]
 		public ActionResult About()
 		{
-			ViewBag.navIndex = 2;
+			ViewBag.NavIndex = 2;
 			return View();
 		}
 

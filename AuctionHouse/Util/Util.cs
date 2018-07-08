@@ -1,4 +1,6 @@
-﻿namespace AuctionHouse
+﻿using System;
+
+namespace AuctionHouse
 {
 	public static class Util
 	{
@@ -17,6 +19,19 @@
 			}
 
 			return sb.ToString().ToLower();
+		}
+
+		public static DateTime AsUnixTimestamp(this double timestamp)
+		{
+			DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+			return origin.AddSeconds(timestamp);
+		}
+
+		public static double ToUnixTimestamp(this DateTime date)
+		{
+			DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+			TimeSpan diff = date.ToUniversalTime() - origin;
+			return diff.TotalMilliseconds;
 		}
 	}
 }

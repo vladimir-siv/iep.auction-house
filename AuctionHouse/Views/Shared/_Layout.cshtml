@@ -110,12 +110,16 @@ else
 						<a class="navbar-brand" href="/Home/Index">Auction House</a>
 					</div>
 					<ul class="nav navbar-nav">
-						<li @if (ViewBag.navIndex == 0) { <text>class = "active"</text> }><a href="/Home/Index"><i class="glyphicon glyphicon-home"> Home</i></a></li>
+						<li @if (ViewBag.NavIndex == 0) { <text>class="active"</text> }><a href="/Home/Index"><i class="glyphicon glyphicon-home"> Home</i></a></li>
 @if (Session["user"] != null)
 {
-						<li @if (ViewBag.navIndex == 1)	{ <text>class = "active"</text> }><a href="/Home/Auction"><i class="glyphicon glyphicon-list-alt"> Auction</i></a></li>
+						<li @if (ViewBag.NavIndex == 1)	{ <text>class="active"</text> }><a href="/Home/Auction"><i class="glyphicon glyphicon-list-alt"> Auction</i></a></li>
 }
-						<li @if (ViewBag.navIndex == 2) { <text>class = "active"</text> }><a href="/Home/About"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
+						<li @if (ViewBag.NavIndex == 2) { <text>class="active"</text> }><a href="/Home/About"><i class="glyphicon glyphicon-info-sign"> About</i></a></li>
+@if (Session["user"] != null && (bool)Session["isAdmin"])
+{
+						<li @if (ViewBag.NavIndex == 3) { <text>class="active"</text> }><a href="/Admin/Index"><i class="glyphicon glyphicon-hand-up"> Approve</i></a></li>
+}
 					</ul>
 				</div>
 			</nav>

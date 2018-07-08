@@ -1,8 +1,8 @@
 namespace AuctionHouse.Models
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Data.Entity;
-	using System.ComponentModel.DataAnnotations.Schema;
 	using System.Linq;
 
 	public partial class AuctionHouseDB : DbContext
@@ -176,6 +176,38 @@ namespace AuctionHouse.Models
 			else isAdmin = false;
 
 			return result;
+		}
+
+		public Auction FindAuctionById(Guid guid)
+		{
+			var query =
+				from auction in Auctions
+				where auction.ID == guid
+				select auction;
+
+			return query.SingleOrDefault();
+		}
+
+		public IEnumerable<Auction> FindReadyAuctions()
+		{
+			var query =
+				from auction in Auctions
+				where auction.OpenedOn == null
+				orderby auction.CreatedOn descending
+				select auction;
+
+			return query.ToList();
+		}
+
+		public IEnumerable<Auction> FindActiveAndCompletedAuctions()
+		{
+			var query =
+				from auction in Auctions
+				where auction.OpenedOn != null
+				orderby auction.OpenedOn descending
+				select auction;
+
+			return query.ToList();
 		}
 	}
 }

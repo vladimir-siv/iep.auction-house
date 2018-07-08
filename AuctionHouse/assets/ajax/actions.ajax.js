@@ -201,4 +201,16 @@ function createAuction(title, time, price, files)
 	});
 }
 
+function manageAuction(guid, approve)
+{
+	$.ajax
+	({
+		url: "http://" + window.location.host + "/Auction/Manage",
+		method: "POST",
+		data: { guid : guid, approve : approve },
+		dataType: "text",
+		success: function(response) { stdResponseAlertHandler(response, ""); }
+	});
+}
+
 /* =================== [/ACTIONS] =================== */
