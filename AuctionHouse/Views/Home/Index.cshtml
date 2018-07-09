@@ -14,12 +14,54 @@
 			@foreach (var auction in Model)
 			{
 				var lastBid = auction.LastBid;
-				var bidder = lastBid == null ? "[No bidder]" : lastBid.User.FirstName + " " + lastBid.User.LastName;
-				@:new AuctionPartialViewModel("@auction.ID.ToString()", "@auction.Title", parseInt((@(auction.OpenedOn.Value.AddSeconds(auction.AuctionTime).ToUnixTimestamp()) - Date.now()) / 1000), @auction.StartingPrice, "@bidder"),
+				var bidderguid = string.Empty;
+				var biddername = "[No bidder]";
+
+				if (lastBid != null)
+				{
+					bidderguid = lastBid.Bidder.ToString();
+					biddername = lastBid.User.FirstName + " " + lastBid.User.LastName;
+				}
+
+				var timeleft = "0";
+				if (auction.CompletedOn == null)
+				{
+					timeleft = "parseInt((" + auction.OpenedOn.Value.AddSeconds(auction.AuctionTime).ToUnixTimestamp() + " - Date.now()) / 1000)";
+				}
+
+				@:new AuctionPartialViewModel("@auction.ID.ToString()", "@auction.Title", @timeleft, @(lastBid != null ? lastBid.Amount : auction.StartingPrice), "@bidderguid", "@biddername"),
 			}
 		];
-		
+
 		per_page = @ViewBag.RecentAuctions;
+
+		@if (Session["user"] != null)
+		{
+			<text>userguid = "@(((AuctionHouse.Models.User)Session["user"]).ID.ToString())"</text>
+		}
+	</script>
+
+	<script type="text/javascript">
+		$(function()
+		{
+			var hub = $.connection.AuctionHub;
+			
+			hub.client.onAuctionManaged = function(guid, title, timeleft, price, bidderguid, biddername, openedon, completedon)
+			{
+				appendAuction(new AuctionPartialViewModel(guid, title, timeleft, price, bidderguid, biddername));
+			};
+			
+			hub.client.onBid = function(guid, bidderguid, biddername, bidon, amount)
+			{
+				var auction = findAuctionByGuid(guid);
+				if (auction === null) return;
+
+				auction.SetPrice(amount);
+				auction.SetBidder(bidderguid, biddername);
+			};
+
+			$.connection.hub.start();
+		});
 	</script>
 }
 
@@ -42,6 +84,8 @@
 			&emsp;Opened <input id="auction-opened" type="checkbox" name="auction-opened" value="Opened" checked>
 			<input id="auction-completed" type="checkbox" name="auction-completed" checked> Completed
 			<br />
+			I am the <input id="auction-users" type="checkbox" name="auction-users"> Last bidder
+			<br />
 			<input id="apply-filter" type="button" class="form-control d-inline-block" style="width: 30%;" name="apply-filter" value="Apply Filter" onclick="apply();">
 			<input id="reset-filter" type="button" class="form-control d-inline-block" style="width: 30%;" name="reset-filter" value="Reset Filter" onclick="reset();">
 
@@ -53,6 +97,7 @@
 				var f_maxprice = filters.find("input#auction-max-price");
 				var f_opened = filters.find("input#auction-opened");
 				var f_completed = filters.find("input#auction-completed");
+				var f_users = filters.find("input#auction-users");
 
 				function apply()
 				{
@@ -74,6 +119,7 @@
 
 					opened = f_opened[0].checked;
 					completed = f_completed[0].checked;
+					usersfilter = f_users[0].checked;
 
 					onFilteringNeeded();
 				}
@@ -85,6 +131,7 @@
 					f_maxprice[0].value = "";
 					f_opened[0].checked = true;
 					f_completed[0].checked = true;
+					f_users[0].checked = false;
 					removeFilters();
 				}
 

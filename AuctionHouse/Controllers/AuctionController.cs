@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Collections.Generic;
 using System.Web.Mvc;
 using System.IO;
 using AuctionHouse.Models;
-using System.Data.Entity;
-
-using System.Linq;
+using AuctionHouse.Hubs;
 
 namespace AuctionHouse.Controllers
 {
@@ -21,9 +20,15 @@ namespace AuctionHouse.Controllers
 			if (auction == null) return HttpNotFound();
 
 			if (auction.OpenedOn == null &&
-				(!(bool)Session["isAdmin"] && ((User)Session["user"]).ID != auction.Holder))
+				(Session["user"] == null || !(bool)Session["isAdmin"] && ((User)Session["user"]).ID != auction.Holder))
 			{
 				return HttpNotFound();
+			}
+
+			if (auction.OpenedOn != null && auction.CompletedOn == null)
+			{
+				var completedOn = auction.OpenedOn.Value.AddSeconds(auction.AuctionTime);
+				if (DateTime.Now >= completedOn) auction.CompletedOn = completedOn;
 			}
 
 			var images = new List<string>(16);
@@ -75,7 +80,9 @@ namespace AuctionHouse.Controllers
 			}
 
 			if (uploadFailed) return "#Error: You must supply at least one image.";
-			
+
+			var user = (User)Session["user"];
+
 			var auction = new Auction
 			{
 				ID = guid,
@@ -87,7 +94,7 @@ namespace AuctionHouse.Controllers
 				StartingPrice = price,
 				Currency = sysparams.Currency,
 				PriceRate = sysparams.PriceRate,
-				Holder = ((User)Session["user"]).ID
+				Holder = user.ID
 			};
 
 			try
@@ -97,6 +104,7 @@ namespace AuctionHouse.Controllers
 			}
 			catch { return "#Error: Could not create the auction. Some of the values are invalid."; }
 
+			AuctionHub.HubContext.Clients.All.onAuctionCreated(auction.ID.ToString(), auction.Title, auction.AuctionTime, auction.StartingPrice, auction.CreatedOn.ToString(Settings.DateTimeFormat), user.FirstName + " " + user.LastName);
 			return auction.ID.ToString();
 		}
 
@@ -132,7 +140,8 @@ namespace AuctionHouse.Controllers
 
 			try { db.SaveChanges(); }
 			catch { return "#Error: Could not manage auction."; }
-
+			
+			AuctionHub.HubContext.Clients.All.onAuctionManaged(auction.ID.ToString(), auction.Title, approve ? auction.AuctionTime : 0, auction.StartingPrice, string.Empty, "[No bidder]", "<b>" + auction.OpenedOn.Value.ToString(Settings.DateTimeFormat) + "</b>", auction.CompletedOn != null ? "<b>" + auction.CompletedOn.Value.ToString(Settings.DateTimeFormat) + "</b>" : "<b style=\"color: red;\">Not complete</b>");
 			return "Auction successfully managed.";
 		}
 
@@ -193,6 +202,7 @@ namespace AuctionHouse.Controllers
 			}
 			catch { return "#Error: Unable to register bid."; }
 
+			AuctionHub.HubContext.Clients.All.onBid(auction.ID.ToString(), user.ID.ToString(), user.FirstName + " " + user.LastName, bid.BidOn.ToString(Settings.DateTimeFormat), amount);
 			return "Bidding successful.";
 		}
 	}

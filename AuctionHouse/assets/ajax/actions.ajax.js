@@ -211,7 +211,7 @@ function manageAuction(guid, approve)
 		method: "POST",
 		data: { guid : guid, approve : approve },
 		dataType: "text",
-		success: function(response) { stdResponseAlertHandler(response, ""); }
+		success: function(response) { stdResponseAlertHandler(response); }
 	});
 }
 

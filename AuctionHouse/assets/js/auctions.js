@@ -1,6 +1,6 @@
 class AuctionPartialViewModel extends DynamicViewModel
 {
-	constructor(guid, title, timeleft, price, bidder)
+	constructor(guid, title, timeleft, price, bidderguid, biddername)
 	{
 		super();
 		
@@ -8,7 +8,8 @@ class AuctionPartialViewModel extends DynamicViewModel
 		this.title = title;
 		this.timeleft = timeleft < 0 ? 0 : timeleft;
 		this.price = price;
-		this.bidder = bidder;
+		this.bidderguid = bidderguid;
+		this.biddername = biddername;
 	}
 	
 	GetFormattedTime()
@@ -42,10 +43,11 @@ class AuctionPartialViewModel extends DynamicViewModel
 		super.dynamics("p", "price", price + "t");
 	}
 	
-	SetBidder(bidder)
+	SetBidder(bidderguid, biddername)
 	{
-		this.bidder = bidder;
-		super.dynamics("p", "bidder", bidder);
+		this.bidderguid = bidderguid;
+		this.biddername = biddername;
+		super.dynamics("p", "bidder", biddername);
 	}
 	
 	SetAction(action, enabled = true)
@@ -69,7 +71,7 @@ class AuctionPartialViewModel extends DynamicViewModel
 				"<img src=\"http://" + window.location.host + "/assets/storage/auctions/" + this.guid + "/0.png\" class=\"padding-sm\" width=\"100%\" height=\"150\" />" +
 				"<p data-dynamic=\"timeleft\" class=\"no-margin\" style=\"color: deepskyblue;\">" + this.GetFormattedTime() + "</p>" +
 				"<p data-dynamic=\"price\" class=\"no-margin\" style=\"color: green\">" + this.price + "t</p>" +
-				"<p data-dynamic=\"bidder\" class=\"no-margin\">" + this.bidder + "</p>" +
+				"<p data-dynamic=\"bidder\" class=\"no-margin\">" + this.biddername + "</p>" +
 				"<a data-dynamic=\"action\" class=\"btn btn-primary btn-sm" + (this.timeleft > 0 ? "" : " disabled") + "\" href=\"/Auction/Show?id=" + this.guid + "\" target=\"_blank\">Bid now</a>" +
 			"</article>";
 	}
@@ -116,6 +118,7 @@ class AuctionApprovalViewModel extends ViewModel
 
 var auctions = []; // Array of DynamicViewModels to display, server should feed this array
 var dynamics = true; // Should timer refresh the time of auctions each second, server may feed this value
+var userguid = "?"; // Guid of the current user, server should feed this value (or leave blank if nobody is logged in)
 
 var filter = new XFilter();
 
@@ -124,6 +127,7 @@ doc.ready(function()
 	filter.reg(titleFilter);
 	filter.reg(priceFilter);
 	filter.reg(stateFilter);
+	filter.reg(usersFilter);
 
 	auctions.reverse();
 
@@ -178,8 +182,24 @@ function onFilteringNeeded()
 
 /* =================== [\LOGIC FUNCTIONS] =================== */
 
+function findAuctionByGuid(guid)
+{
+	var auction = null;
+	for (var i = 0; auction === null && i < auctions.length; ++i)
+	{
+		if (auctions[i].guid === guid)
+		{
+			auction = auctions[i];
+		}
+	}
+
+	return auction;
+}
+
 function appendAuction(auction)
 {
+	if (auction === null) return;
+
 	auctions.push(auction);
 	if (dynamics) auction.DynamicPropChanged.reg(auctionPropChanged);
 
@@ -188,6 +208,8 @@ function appendAuction(auction)
 
 function removeAuction(auction)
 {
+	if (auction === null) return;
+
 	var index = auctions.indexOf(auction);
 	if (index >= 0)
 	{
@@ -249,13 +271,20 @@ function stateFilter(auction)
 	return false;
 }
 
-function setFilters(newtitles, newminprice, newmaxprice, newopened, newcompleted)
+var usersfilter = false;
+function usersFilter(auction)
+{
+	return !usersfilter || auction.bidderguid === userguid;
+}
+
+function setFilters(newtitles, newminprice, newmaxprice, newopened, newcompleted, newusersfilter)
 {
 	titles = newtitles;
 	minprice = newminprice;
 	maxprice = newmaxprice;
 	opened = newopened;
 	completed = newcompleted;
+	usersfilter = newusersfilter;
 	onFilteringNeeded();
 }
 function removeFilters()
@@ -265,6 +294,7 @@ function removeFilters()
 	maxprice = -1;
 	opened = true;
 	completed = true;
+	usersfilter = false;
 	onFilteringNeeded();
 }
 

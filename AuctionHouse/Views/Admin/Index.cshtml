@@ -19,6 +19,28 @@
 
 		per_page = @ViewBag.RecentAuctions;
 		dynamics = false;
+		usersfilter = false;
+	</script>
+
+	<script type="text/javascript">
+		$(function()
+		{
+			var hub = $.connection.AuctionHub;
+
+			hub.client.onAuctionCreated = function(guid, title, timeleft, price, createdon, holder)
+			{
+				appendAuction(new AuctionApprovalViewModel(guid, title, timeleft, price, createdon, holder));
+			};
+
+			hub.client.onAuctionManaged = function(guid, title, timeleft, price, bidderguid, biddername, openedon, completedon)
+			{
+				var auction = findAuctionByGuid(guid);
+				if (auction === null) return;
+				removeAuction(auction);
+			};
+
+			$.connection.hub.start();
+		});
 	</script>
 }
 

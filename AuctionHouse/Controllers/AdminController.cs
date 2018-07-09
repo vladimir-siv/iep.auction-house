@@ -49,6 +49,8 @@ namespace AuctionHouse.Controllers
 				db.Entry(current).State = EntityState.Modified;
 				db.SaveChanges();
 
+				
+
 				return "Successfully changed parameters!";
 			}
 			catch { return "#Error: Could change parameters."; }

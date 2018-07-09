@@ -174,7 +174,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Hubs\HiHub.cs" />
+    <Compile Include="Hubs\AuctionHub.cs" />
     <Compile Include="Models\Administrator.cs" />
     <Compile Include="Models\Auction.cs" />
     <Compile Include="Models\AuctionHouseDB.cs" />

@@ -13,10 +13,41 @@
 {
 		<text>timeleft = @Model.AuctionTime; timeout = false;</text>
 }
+else if (Model.CompletedOn != null)
+{
+	<text>timeleft = 0;</text>
+}
 else
 {
 		<text>timeleft = parseInt((@(Model.OpenedOn.Value.AddSeconds(Model.AuctionTime).ToUnixTimestamp()) - Date.now()) / 1000);</text>
 }
+	</script>
+
+	<script type="text/javascript">
+		$(function()
+		{
+			var hub = $.connection.AuctionHub;
+
+			hub.client.onAuctionManaged = function(guid, title, timeleft, price, bidderguid, biddername, openedon, completedon)
+			{
+				if (guid != "@Model.ID.ToString()") return;
+				dynamic_fields["opened-on"].html(openedon);
+				dynamic_fields["completed-on"].html(completedon);
+				if (completedon === "<b style=\"color: red;\">Not complete</b>") setInterval(timer, 1000);
+				else dynamic_fields["timeleft"].html("<b>00:00:00</b>");
+			};
+
+			hub.client.onBid = function(guid, bidderguid, biddername, bidon, amount)
+			{
+				if (guid != "@Model.ID.ToString()") return;
+				dynamic_fields["bidder"].html("<a class=\"hover-text-decor-none\" href=\"/Home/ViewProfile?id=" + bidderguid + "\"><b>" + biddername + "</b></a>");
+				dynamic_fields["current-price"].html("<b>" + amount + " t [~" + (amount * @Model.PriceRate) + " @Model.Currency]</b>");
+				dynamic_fields["bid-amount"][0].value = amount + 1;
+				addBidder(bidderguid, biddername, bidon, amount);
+			};
+
+			$.connection.hub.start();
+		});
 	</script>
 }
 
@@ -27,13 +58,13 @@ else
 
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
-@foreach (var source in ViewBag.ImageSources)
-{
-			<img src="@source" class="margin-sm" style="max-width: 80%;" />
-}
+			@foreach (var source in ViewBag.ImageSources)
+			{
+				<img src="@source" class="margin-sm" style="max-width: 80%;" />
+			}
 		</div>
 	</div>
-	
+
 	<div class="row">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 font-times-new-roman text-left" style="font-size: 25px">
 			<h2 class="text-center">Auction details:</h2>
@@ -44,7 +75,7 @@ else
 				</tr>
 				<tr>
 					<td>Time left:</td>
-					<td data-dynamic="timeleft" style="color: deepskyblue;"><b></b></td>
+					<td data-dynamic="timeleft" style="color: deepskyblue;"><b>00:00:00</b></td>
 				</tr>
 				<tr>
 					<td>Currency:</td>
@@ -57,14 +88,14 @@ else
 				<tr>
 					<td>Bidder:</td>
 					<td data-dynamic="bidder" style="color: red;">
-@if (ViewBag.Bidder != null)
-{
-						<a class="hover-text-decor-none" href="/Home/ViewProfile?id=@ViewBag.Bidder.ID"><b>@ViewBag.Bidder.FirstName @ViewBag.Bidder.LastName</b></a>
-}
-else
-{
-						<b>No bidders</b>						
-}
+						@if (ViewBag.Bidder != null)
+						{
+							<a class="hover-text-decor-none" href="/Home/ViewProfile?id=@ViewBag.Bidder.ID"><b>@ViewBag.Bidder.FirstName @ViewBag.Bidder.LastName</b></a>
+						}
+						else
+						{
+							<b>No bidders</b>
+						}
 					</td>
 				</tr>
 				<tr>
@@ -74,32 +105,32 @@ else
 				<tr>
 					<td>Opened on:</td>
 					<td data-dynamic="opened-on">
-@if (Model.OpenedOn != null)
-{
-						<b>@Model.OpenedOn.Value.ToString(Settings.DateTimeFormat)</b>
-}
-else
-{
-						<b>Pending . . .</b>
-}
+						@if (Model.OpenedOn != null)
+						{
+							<b>@Model.OpenedOn.Value.ToString(Settings.DateTimeFormat)</b>
+						}
+						else
+						{
+							<b>Pending . . .</b>
+						}
 					</td>
 				</tr>
 				<tr>
 					<td>Completed on:</td>
-					<td data-dynamic="closed-on">
-@if (Model.CompletedOn != null)
-{
-						<b>@Model.OpenedOn.Value.ToString(Settings.DateTimeFormat)</b>
-}
-else
-{
-						<b style="color: red;">Not complete</b>
-}
+					<td data-dynamic="completed-on">
+						@if (Model.CompletedOn != null)
+						{
+							<b>@Model.CompletedOn.Value.ToString(Settings.DateTimeFormat)</b>
+						}
+						else
+						{
+							<b style="color: red;">Not complete</b>
+						}
 					</td>
 				</tr>
 				<tr>
 					<td><button type="button" class="btn btn-primary btn-sm" onclick="bid('@Model.ID.ToString()', $('input#bid-amount')[0].value);">Bid</button></td>
-					<td><input id="bid-amount" type="text" class="form-control" name="bid-amount" value="@((ViewBag.CurrentPrice + 1).ToString(Settings.DecimalFormat))" placeholder="Amount (in tokens)" /></td>
+					<td><input id="bid-amount" data-dynamic="bid-amount" type="text" class="form-control" name="bid-amount" value="@((ViewBag.CurrentPrice + 1).ToString(Settings.DecimalFormat))" placeholder="Amount (in tokens)" /></td>
 				</tr>
 			</table>
 		</div>
@@ -115,14 +146,14 @@ else
 				</tr>
 			</table>
 			<table data-dynamic="bids" class="table table-striped font-times-new-roman">
-@foreach (AuctionHouse.Models.Bid bid in Model.Bids.OrderBy(bid => bid.BidOn, DateTimeComparer.Descending))
-{
-				<tr>
-					<td><b><a class="hover-text-decor-none" href="/Home/ViewProfile?id=@bid.Bidder">@bid.User.FirstName @bid.User.LastName</a></b></td>
-					<td><b>@bid.BidOn.ToString(Settings.DateTimeFormat)</b></td>
-					<td><b>@bid.Amount.ToString(Settings.DecimalFormat) t</b></td>
-				</tr>
-}
+				@foreach (AuctionHouse.Models.Bid bid in Model.Bids.OrderBy(bid => bid.BidOn, DateTimeComparer.Descending))
+				{
+					<tr>
+						<td><b><a class="hover-text-decor-none" href="/Home/ViewProfile?id=@bid.Bidder">@bid.User.FirstName @bid.User.LastName</a></b></td>
+						<td><b>@bid.BidOn.ToString(Settings.DateTimeFormat)</b></td>
+						<td><b>@bid.Amount.ToString(Settings.DecimalFormat) t</b></td>
+					</tr>
+				}
 			</table>
 		</div>
 	</div>
