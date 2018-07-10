@@ -40,7 +40,7 @@ function bidderView(bidderguid, biddername, bidon, amount)
 {
 	return "" +
 		"<tr>" +
-			"<td><b><a class=\"hover-text-decor-none\" href=\"/Home/ViewProfile?id=" + bidderguid + "\">" + biddername + "</a></b></td>" +
+		"<td><b><a class=\"hover-text-decor-none\" href=\"/Home/ViewProfile?id=" + bidderguid + "\">" + biddername + "</a></b></td>" +
 			"<td><b>" + bidon + "</b></td>" +
 			"<td><b>" + amount + " t </b></td>" +
 		"</tr>";

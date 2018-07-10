@@ -184,6 +184,7 @@
     <Compile Include="Models\TokenOrder.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\Mailer.cs" />
     <Compile Include="Util\Settings.cs" />
     <Compile Include="Util\Util.cs" />
   </ItemGroup>
@@ -193,6 +194,7 @@
     <Content Include="assets\css\layout.css" />
     <Content Include="assets\css\stylization.css" />
     <Content Include="assets\css\utility.css" />
+    <Content Include="assets\js\profile.js" />
     <Content Include="assets\js\auction.js" />
     <Content Include="assets\js\auctions.js" />
     <Content Include="assets\js\config.js" />

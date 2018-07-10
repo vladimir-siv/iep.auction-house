@@ -5,6 +5,11 @@ namespace AuctionHouse
 {
 	public static class Settings
 	{
+		public const string SMTPHost = "smtp.sendgrid.net";
+		public const int SMTPPort = 587;
+		public const string SMTPUsername = "auctionhouse";
+		public const string SMTPPassword = "#vladimir96sivcev@";
+
 		public const string DateTimeFormat = "dd.MM.yyyy. HH:mm:ss";
 		public const string DecimalFormat = "N4";
 

@@ -1,32 +1,33 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<meta name="author" content="Vladimir Sivčev">
-		<meta name="description" content="Auction House Website">
+	<meta name="author" content="Vladimir Sivčev">
+	<meta name="description" content="Auction House Website">
 
-		<title>@ViewBag.Title - AuctionHouse</title>
+	<title>@ViewBag.Title - AuctionHouse</title>
 
-		<link rel="icon" href="~/assets/res/logo.ico">
-		<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Indie+Flower">
-		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rammetto+One">
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cookie">
-		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		@Styles.Render("~/assets/css/utility.css", "~/assets/css/addition.css", "~/assets/css/layout.css", "~/assets/css/stylization.css")
+	<link rel="icon" href="~/assets/res/logo.ico">
+	<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Indie+Flower">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Rammetto+One">
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Cookie">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	@Styles.Render("~/assets/css/utility.css", "~/assets/css/addition.css", "~/assets/css/layout.css", "~/assets/css/stylization.css")
 
-		@Scripts.Render("~/bundles/modernizr")
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-		@Scripts.Render("~/Scripts/jquery.signalR-2.3.0.min.js", "~/signalr/hubs")
-		@Scripts.Render("~/assets/style-js/utility.style.js", "~/assets/style-js/fixed-dynamic.style.js", "~/assets/js/events.js", "~/assets/js/filters.js", "~/assets/js/config.js", "~/assets/js/popups.js", "~/assets/js/views.js", "~/assets/ajax/actions.ajax.js")
-		@RenderSection("scripts", required: false)
+	@Scripts.Render("~/bundles/modernizr")
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://stage.centili.com/widget/js/c-mobile-payment-scripts.js"></script>
+	@Scripts.Render("~/Scripts/jquery.signalR-2.3.0.min.js", "~/signalr/hubs")
+	@Scripts.Render("~/assets/style-js/utility.style.js", "~/assets/style-js/fixed-dynamic.style.js", "~/assets/js/events.js", "~/assets/js/filters.js", "~/assets/js/config.js", "~/assets/js/popups.js", "~/assets/js/views.js", "~/assets/ajax/actions.ajax.js")
+	@RenderSection("scripts", required: false)
 
-		@RenderSection("addition", required: false)
-	</head>
+	@RenderSection("addition", required: false)
+</head>
 	<body class="fillup">
 		<div id="wrapper" class="border-boxed expanded fillup">
 			<div id="top-content-fixed" class="border-boxed expanded p-fixed on-top">

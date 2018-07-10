@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Text;
 using System.Web.Mvc;
 using AuctionHouse.Models;
+using AuctionHouse.Hubs;
 
 namespace AuctionHouse.Controllers
 {
@@ -122,6 +123,45 @@ namespace AuctionHouse.Controllers
 
 			Session["user"] = user;
 			return sb.ToString();
+		}
+
+		[HttpPost]
+		public string OrderTokens(int package)
+		{
+			if (Session["user"] == null) return string.Empty;
+
+			var parameters = db.GetCurrentSystemParameters();
+
+			decimal amount = 0;
+
+			switch (package)
+			{
+				case 0: amount = parameters.SilverPackage; break;
+				case 1: amount = parameters.GoldPackage; break;
+				case 2: amount = parameters.PlatinumPackage; break;
+				default: return "#Error: Such package does not exist.";
+			}
+
+			var order = new TokenOrder
+			{
+				ID = Guid.NewGuid(),
+				Buyer = ((User)Session["user"]).ID,
+				Amount = amount,
+				Currency = parameters.Currency,
+				PriceRate = parameters.PriceRate,
+				Status = null
+			};
+
+			try
+			{
+				db.TokenOrders.Add(order);
+				db.SaveChanges();
+			}
+			catch { return "#Error: Could not initiate order. Please, try again."; }
+
+			AuctionHub.HubContext.Clients.All.onTokenOrderCreated(order.Buyer.ToString(), order.ID.ToString(), order.Amount.ToString(Settings.DecimalFormat), order.Currency, order.PriceRate.ToString(Settings.DecimalFormat));
+
+			return "<a id=\"c-mobile-payment-widget\" href=\"https://stage.centili.com/widget/WidgetModule?api=b23180535003ba668fe3d1d2876ad928&clientid=" + order.ID + "&country=rs&package=" + package + "\"><img src=\"https://www.centili.com/images/centili-widget-button.png\"/></a>";
 		}
 	}
 }

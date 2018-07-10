@@ -41,9 +41,13 @@ namespace AuctionHouse.Controllers
 			if (Session["user"] == null) return HttpNotFound();
 
 			User user = null;
+
 			if (Guid.TryParse(userid, out var id)) user = db.FindUserById(id);
-			else user = Session["user"] as User;
+			else user = db.FindUserById(((User)Session["user"]).ID);
+
 			if (user == null) user = Models.User.Dummy;
+			else if (user.ID == ((User)Session["user"]).ID) ViewBag.TokenOrders = db.FindUserTokenOrders(user);
+
 			return View(user);
 		}
 	}

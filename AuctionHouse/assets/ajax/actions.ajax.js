@@ -235,6 +235,18 @@ function bid(guid, amount)
 	});
 }
 
+function orderTokens(popupid, package)
+{
+	$.ajax
+	({
+		url: "http://" + window.location.host + "/Account/OrderTokens",
+		method: "POST",
+		data: { package : package },
+		dataType: "html",
+		success: function (response) { stdResponsePopupHandler(popupid, response, false); }
+	});
+}
+
 function changeSystem(recentauctions, defaultauctiontime, silverpackage, goldpackage, platinumpackage, currency, pricerate)
 {
 	$.ajax

@@ -322,6 +322,57 @@ class AccountInfoPopupFeed extends PopupFeed
 	}
 }
 
+class OrderTokensPopupFeed extends PopupFeed
+{
+	constructor(callback)
+	{
+		super();
+		this.callback = callback;
+	}
+	Header()
+	{
+		return "" +
+			"<button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"close\">&times;</button>" +
+			"<h4 class=\"modal-title\"><span class=\"glyphicon glyphicon-certificate\"></span>&emsp;Order tokens</h4>";
+	}
+	Body()
+	{
+		return "" +
+			"<div class=\"input-group\">" +
+				"<span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-cog\"></i></span>" +
+				"<div class=\"form-control\">" +
+					"<input id=\"order-package\" type=\"radio\" name=\"order-package\" value=\"0\" checked> Silver&emsp;" +
+					"<input id=\"order-package\" type=\"radio\" name=\"order-package\" value=\"1\"> Gold&emsp;" +
+					"<input id=\"order-package\" type=\"radio\" name=\"order-package\" value=\"2\"> Platinum&emsp;" +
+				"</div>" +
+			"</div>";
+	}
+	Footer()
+	{
+		return "" +
+			"<div class=\"row\">" +
+				"<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-4\">" +
+					"<button type=\"button\" class=\"btn btn-primary btn-sm btn-block\" onclick=\"" +
+						this.callback +
+						"(" +
+							"'" + this.popups[this.current].id + "', " +
+							"$('#" + this.popups[this.current].id + " #order-package:checked')[0].value" +
+						");" +
+					"\">Order</button>" +
+				"</div>" +
+				"<div class=\"col-lg-8 col-md-8 col-sm-8 col-xs-4\"></div>" +
+				"<div class=\"col-lg-2 col-md-2 col-sm-2 col-xs-4\">" +
+					"<button type=\"button\" class=\"btn btn-danger btn-sm btn-block\" data-dismiss=\"modal\" aria-label=\"close\">Close</button>" +
+				"</div>" +
+			"</div>";
+	}
+	Info()
+	{
+		return "";
+	}
+}
+
+
 class AlertPopupFeed extends PopupFeed
 {
 	constructor(initialContent)
@@ -346,6 +397,7 @@ var alertPopup;
 var loginPopupFeed;
 var registerPopupFeed;
 var accountInfoPopupFeed;
+var orderTokensPopupFeed;
 var alertPopupFeed;
 
 doc.ready(function()
@@ -361,7 +413,10 @@ doc.ready(function()
 	
 	accountInfoPopupFeed = new AccountInfoPopupFeed("changeAccountInfo");
 	accountInfoPopupFeed.Subscribe(mainPopup);
-	
+
+	orderTokensPopupFeed = new OrderTokensPopupFeed("orderTokens");
+	orderTokensPopupFeed.Subscribe(mainPopup);
+
 	alertPopupFeed = new AlertPopupFeed(Alert.New("success", "<b>Success!</b> The job is done.", true, "modal"));
 	alertPopupFeed.Subscribe(alertPopup);
 	

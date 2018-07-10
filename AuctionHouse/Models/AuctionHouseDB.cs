@@ -208,5 +208,25 @@ namespace AuctionHouse.Models
 
 			return query.ToList();
 		}
+
+		public TokenOrder FindTokenOrderByGuid(Guid guid)
+		{
+			var query =
+				from order in TokenOrders
+				where order.ID == guid
+				select order;
+
+			return query.SingleOrDefault();
+		}
+
+		public IEnumerable<TokenOrder> FindUserTokenOrders(User user)
+		{
+			var query =
+				from order in TokenOrders
+				where order.Buyer == user.ID
+				select order;
+
+			return query.ToList();
+		}
 	}
 }

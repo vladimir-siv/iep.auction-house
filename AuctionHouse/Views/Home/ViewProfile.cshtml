@@ -1,6 +1,42 @@
 ﻿@model AuctionHouse.Models.User
 @{ViewBag.Title = "Profile";}
 
+@section scripts
+{
+@if (ViewBag.TokenOrders != null)
+{
+	@Scripts.Render("~/assets/js/profile.js")
+}
+}
+
+@section addition
+{
+@if (ViewBag.TokenOrders != null)
+{
+	<script type="text/javascript">
+		$(function ()
+		{
+			var hub = $.connection.AuctionHub;
+
+			hub.client.onTokenOrderCreated = function(userid, guid, amount, currency, pricerate)
+			{
+				if (userid != "@Model.ID.ToString()") return;
+				addOrder(guid, amount, currency, pricerate);
+			};
+
+			hub.client.onTokenOrderCompleted = function(userid, guid, balance, status)
+			{
+				if (userid != "@Model.ID.ToString()") return;
+				if (balance >= 0) dynamic_fields["balance"].html(balance);
+				updateOrderStatus(guid, status);
+			};
+			
+			$.connection.hub.start();
+		});
+	</script>
+}
+}
+
 <div class="jumbotron no-padding-bottom text-center text-secondary" style="background-color: inherit;">
 	<p class="font-times-new-roman" style="font-size : 50px">@Model.FirstName @Model.LastName</p>
 </div>
@@ -24,7 +60,10 @@
 {
 			<tr>
 				<td>Balance:</td>
-				<td><b>@Model.Balance</b>t</td>
+				<td>
+					<b data-dynamic="balance">@Model.Balance</b> t
+					<button type="button" class="btn btn-success btn-sm" onclick="orderTokensPopupFeed.Toggle(0);">Get more tokens</button>
+				</td>
 			</tr>
 			<tr>
 				<td>Change Info:</td>
@@ -34,3 +73,43 @@
 		</table>
 	</div>
 </div>
+@if (ViewBag.TokenOrders != null)
+{
+	<div class="row">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 font-times-new-roman text-left" style="font-size: 25px">
+			<h2 class="text-center">Orders:</h2>
+			<table class="table table-striped font-times-new-roman">
+				<tr>
+					<th>Amount</th>
+					<th>Currency</th>
+					<th>Price Rate</th>
+					<th>Status</th>
+				</tr>
+			</table>
+			<table data-dynamic="orders" class="table table-striped font-times-new-roman">
+				@foreach (AuctionHouse.Models.TokenOrder order in ViewBag.TokenOrders)
+				{
+					<tr id="@order.ID.ToString()">
+						<td><b>@order.Amount.ToString(Settings.DecimalFormat) t</b></td>
+						<td><b>@order.Currency</b></td>
+						<td><b>@order.PriceRate.ToString(Settings.DecimalFormat)</b></td>
+						<td>
+							@if (order.Status == null)
+							{
+								<text><b style="color: deepskyblue;">Pending</b></text>
+							}
+							else if (order.Status.Value)
+							{
+								<text><b style="color: forestgreen;">Completed</b></text>
+							}
+							else
+							{
+								<text><b style="color: red;">Failed</b></text>
+							}
+						</td>
+					</tr>
+				}
+			</table>
+		</div>
+	</div>
+}
