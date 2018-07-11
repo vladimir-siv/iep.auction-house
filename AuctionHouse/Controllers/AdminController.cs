@@ -56,10 +56,10 @@ namespace AuctionHouse.Controllers
 		}
 
 		[HttpPost]
-		public void PaymentProcessed(string clientid, string status)
+		public void PaymentProcessed(string clientId, string status)
 		{
 			TokenOrder order = null;
-			if (Guid.TryParse(clientid, out var id)) order = db.FindTokenOrderByGuid(id);
+			if (Guid.TryParse(clientId, out var id)) order = db.FindTokenOrderByGuid(id);
 			if (order == null) return;
 
 			if (order.Status != null) return;
@@ -81,7 +81,7 @@ namespace AuctionHouse.Controllers
 
 			AuctionHub.HubContext.Clients.All.onTokenOrderCompleted(order.Buyer.ToString(), order.ID.ToString(), balance, order.Status.Value);
 
-			/*Mailer.SendMail("auctionhouse@noreply.com", "Auction House", user.Email, user.FirstName + " " + user.LastName, "Auction House - Token Order", 
+			Mailer.SendMail(Settings.SMTPUsername, "Auction House", user.Email, user.FirstName + " " + user.LastName, "Auction House - Token Order", 
 				"Dear " + user.FirstName + "," + Environment.NewLine +
 				Environment.NewLine +
 				"This e-mail has been sent to inform you that your token order" + Environment.NewLine +
@@ -91,7 +91,7 @@ namespace AuctionHouse.Controllers
 				Environment.NewLine +
 				"Kind regards," + Environment.NewLine +
 				"Auction House"
-			);*/
+			);
 		}
 	}
 }

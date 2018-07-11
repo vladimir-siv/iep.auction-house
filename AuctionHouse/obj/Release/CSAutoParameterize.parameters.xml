@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="AuctionHouseDB-Web.config Connection String" description="AuctionHouseDB Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:vladimir-siv.database.windows.net,1433;Initial Catalog=auction-house;Persist Security Info=False;User ID=sivi;Password=#vladimir96sivcev@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="D:\\Desktop\\ETF\\SI\.6S\\IEP\\iep\.auction-house\\AuctionHouse\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='AuctionHouseDB']/@connectionString" />
+  </parameter>
+</parameters>

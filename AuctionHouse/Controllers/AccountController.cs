@@ -161,7 +161,7 @@ namespace AuctionHouse.Controllers
 
 			AuctionHub.HubContext.Clients.All.onTokenOrderCreated(order.Buyer.ToString(), order.ID.ToString(), order.Amount.ToString(Settings.DecimalFormat), order.Currency, order.PriceRate.ToString(Settings.DecimalFormat));
 
-			return "<a id=\"c-mobile-payment-widget\" href=\"https://stage.centili.com/widget/WidgetModule?api=b23180535003ba668fe3d1d2876ad928&clientid=" + order.ID + "&country=rs&package=" + package + "\"><img src=\"https://www.centili.com/images/centili-widget-button.png\"/></a>";
+			return "<a id=\"c-mobile-payment-widget\" href=\"https://stage.centili.com/payment/widget?apikey=b23180535003ba668fe3d1d2876ad928&reference=" + order.ID + "&country=rs&package=" + package + "\" target=\"_blank\"><img src=\"https://www.centili.com/images/centili-widget-button.png\"/></a>";
 		}
 	}
 }

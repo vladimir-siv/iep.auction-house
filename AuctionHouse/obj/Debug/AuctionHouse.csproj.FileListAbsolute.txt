@@ -103,4 +103,3 @@ D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.c
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.csproj.CopyComplete
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.pdb
-D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Debug\AuctionHouse.csprojResolveAssemblyReference.cache

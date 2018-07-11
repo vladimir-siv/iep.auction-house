@@ -203,15 +203,8 @@
     <Content Include="assets\js\popups.js" />
     <Content Include="assets\js\events.js" />
     <Content Include="assets\js\views.js" />
-    <Content Include="assets\res\accept.png" />
-    <Content Include="assets\res\avatar.png" />
-    <Content Include="assets\res\favicon.ico" />
     <Content Include="assets\res\heading.png" />
-    <Content Include="assets\res\icon.png" />
     <Content Include="assets\res\logo.png" />
-    <Content Include="assets\res\reject.png" />
-    <Content Include="assets\res\seen.png" />
-    <Content Include="assets\res\unseen.png" />
     <Content Include="assets\style-js\fixed-dynamic.style.js" />
     <Content Include="assets\style-js\utility.style.js" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -248,6 +241,7 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <None Include="Properties\PublishProfiles\iepAuctionHouse - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -273,7 +267,9 @@
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

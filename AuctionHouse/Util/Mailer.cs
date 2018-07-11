@@ -10,6 +10,7 @@ namespace AuctionHouse
 		{
 			using (SmtpClient client = new SmtpClient(Settings.SMTPHost, Settings.SMTPPort))
 			{
+				client.EnableSsl = true;
 				client.UseDefaultCredentials = false;
 				client.Credentials = new NetworkCredential(Settings.SMTPUsername, Settings.SMTPPassword);
 
