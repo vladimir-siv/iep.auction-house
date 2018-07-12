@@ -10,8 +10,9 @@ namespace AuctionHouse.Controllers
 	{
 		private AuctionHouseDB db = new AuctionHouseDB();
 
-		// POST api/<controller>
-		public void Post(string clientId, string status)
+		// POST api/<controller>/<action>
+		[HttpPost]
+		public void Process(string clientId, string status)
 		{
 			TokenOrder order = null;
 			if (Guid.TryParse(clientId, out var id)) order = db.FindTokenOrderByGuid(id);
