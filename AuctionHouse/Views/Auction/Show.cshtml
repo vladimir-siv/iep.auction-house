@@ -132,6 +132,13 @@ else
 					<td><button type="button" class="btn btn-primary btn-sm" onclick="bid('@Model.ID.ToString()', $('input#bid-amount')[0].value);">Bid</button></td>
 					<td><input id="bid-amount" data-dynamic="bid-amount" type="text" class="form-control" name="bid-amount" value="@((ViewBag.CurrentPrice + 1).ToString(Settings.DecimalFormat))" placeholder="Amount (in tokens)" /></td>
 				</tr>
+				@if (Session["user"] != null && Model.Holder == ((AuctionHouse.Models.User)Session["user"]).ID)
+				{
+					<tr>
+						<td>Claim tokens</td>
+						<td><button type="button" class="btn btn-success btn-sm" onclick="claim('@Model.ID.ToString()');">Claim</button></td>
+					</tr>
+				}
 			</table>
 		</div>
 	</div>

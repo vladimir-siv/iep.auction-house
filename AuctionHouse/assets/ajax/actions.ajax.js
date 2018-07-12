@@ -235,6 +235,18 @@ function bid(guid, amount)
 	});
 }
 
+function claim(guid)
+{
+	$.ajax
+	({
+		url: "http://" + window.location.host + "/Auction/Claim",
+		method: "POST",
+		data: { guid: guid },
+		dataType: "text",
+		success: function (response) { stdResponseAlertHandler(response, ""); }
+	});
+}
+
 function orderTokens(popupid, package)
 {
 	$.ajax

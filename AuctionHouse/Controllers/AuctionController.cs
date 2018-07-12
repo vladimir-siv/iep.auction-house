@@ -205,5 +205,47 @@ namespace AuctionHouse.Controllers
 			AuctionHub.HubContext.Clients.All.onBid(auction.ID.ToString(), user.ID.ToString(), user.FirstName + " " + user.LastName, bid.BidOn.ToString(Settings.DateTimeFormat), amount);
 			return "Bidding successful.";
 		}
+
+		[HttpPost]
+		public string Claim(string guid)
+		{
+			var user = Session["user"] as User;
+			if (user == null) return string.Empty;
+
+			Auction auction = null;
+			if (Guid.TryParse(guid, out var id)) auction = db.FindAuctionById(id);
+
+			if (auction == null) return "#Error: Invalid auction.";
+
+			if (auction.Holder != user.ID) return "#Error: Can't claim auction prize.";
+
+			if (auction.OpenedOn == null) return "#Error: Auction is not opened.";
+
+			var now = DateTime.Now;
+
+			if (now < auction.OpenedOn.Value.AddSeconds(auction.AuctionTime)) return "#Error: Auction is not finished yet.";
+
+			if (auction.CompletedOn != null) return "#Error: Auction is completed, no prize left to claim.";
+
+			auction.CompletedOn = now;
+			db.Entry(auction).State = EntityState.Modified;
+
+			var lastBid = auction.LastBid;
+
+			if (lastBid != null)
+			{
+				user = db.FindUserById(user.ID);
+				user.Balance += lastBid.Amount;
+				db.Entry(user).State = EntityState.Modified;
+			}
+
+			try
+			{
+				db.SaveChanges();
+			}
+			catch { return "#Error: Could not claim auction prize. Please, try again."; }
+
+			return "Successfully claimed auction prize. Please, check your balance.";
+		}
 	}
 }

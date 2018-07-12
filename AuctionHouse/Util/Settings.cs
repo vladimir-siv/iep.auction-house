@@ -10,7 +10,7 @@ namespace AuctionHouse
 		public const string SMTPUsername = "si3iep.auctionhouse@gmail.com";
 		public const string SMTPPassword = "#vladimir96sivcev@";
 
-		public const string DateTimeFormat = "dd.MM.yyyy. HH:mm:ss";
+		public const string DateTimeFormat = "dd.MM.yyyy. HH':'mm':'ss";
 		public const string DecimalFormat = "N4";
 
 		public static T Best<T>(this ICollection<T> collection, Func<T, T, T> comparer)
