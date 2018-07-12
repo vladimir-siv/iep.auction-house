@@ -6,7 +6,7 @@ using AuctionHouse.Hubs;
 
 namespace AuctionHouse.Controllers
 {
-	public class Payment : ApiController
+	public class PaymentController : ApiController
 	{
 		private AuctionHouseDB db = new AuctionHouseDB();
 
