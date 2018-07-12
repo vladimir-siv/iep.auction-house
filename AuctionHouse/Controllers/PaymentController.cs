@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Web.Http;
 using AuctionHouse.Models;
@@ -48,6 +49,33 @@ namespace AuctionHouse.Controllers
 				"Kind regards," + Environment.NewLine +
 				"Auction House"
 			);
+		}
+
+		// GET api/<controller>
+		public IEnumerable<string> Get()
+		{
+			return new string[] { };
+		}
+
+		// GET api/<controller>/5
+		public string Get(int id)
+		{
+			return string.Empty;
+		}
+
+		// POST api/<controller>
+		public void Post([FromBody]string value)
+		{
+		}
+
+		// PUT api/<controller>/5
+		public void Put(int id, [FromBody]string value)
+		{
+		}
+
+		// DELETE api/<controller>/5
+		public void Delete(int id)
+		{
 		}
 	}
 }
