@@ -99,8 +99,8 @@ D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.Deployment.xml
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.WebPages.Razor.xml
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\bin\System.Web.Optimization.xml
+D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Release\AuctionHouse.csprojResolveAssemblyReference.cache
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Release\AuctionHouse.csproj.CoreCompileInputs.cache
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Release\AuctionHouse.csproj.CopyComplete
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Release\AuctionHouse.dll
 D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Release\AuctionHouse.pdb
-D:\Desktop\ETF\SI.6S\IEP\iep.auction-house\AuctionHouse\obj\Release\AuctionHouse.csprojResolveAssemblyReference.cache

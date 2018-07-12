@@ -10,6 +10,10 @@ namespace AuctionHouse.Controllers
 {
     public class AuctionController : Controller
     {
+		private static object manageSync = new object();
+		private static object bidSync = new object();
+		private static object claimSync = new object();
+
 		private AuctionHouseDB db = new AuctionHouseDB();
 
 		[HttpGet]
@@ -111,141 +115,150 @@ namespace AuctionHouse.Controllers
 		[HttpPost]
 		public string Manage(string guid, bool approve)
 		{
-			if (Session["user"] == null || !(bool)Session["isAdmin"]) return "";
-
-			if (string.IsNullOrWhiteSpace(guid) || !Guid.TryParse(guid, out var id))
+			lock (manageSync)
 			{
-				return "#Error: Invalid auction id.";
+				if (Session["user"] == null || !(bool)Session["isAdmin"]) return "";
+
+				if (string.IsNullOrWhiteSpace(guid) || !Guid.TryParse(guid, out var id))
+				{
+					return "#Error: Invalid auction id.";
+				}
+
+				var auction = db.FindAuctionById(id);
+
+				if (auction == null)
+				{
+					return "#Error: Could not find auction with such id.";
+				}
+
+				if (auction.OpenedOn != null)
+				{
+					return "#Error: Auction was already managed.";
+				}
+
+				auction.OpenedOn = DateTime.Now;
+				if (!approve)
+				{
+					auction.CompletedOn = auction.OpenedOn;
+				}
+
+				db.Entry(auction).State = EntityState.Modified;
+
+				try { db.SaveChanges(); }
+				catch { return "#Error: Could not manage auction."; }
+
+				AuctionHub.HubContext.Clients.All.onAuctionManaged(auction.ID.ToString(), auction.Title, approve ? auction.AuctionTime : 0, auction.StartingPrice, string.Empty, "[No bidder]", "<b>" + auction.OpenedOn.Value.ToString(Settings.DateTimeFormat) + "</b>", auction.CompletedOn != null ? "<b>" + auction.CompletedOn.Value.ToString(Settings.DateTimeFormat) + "</b>" : "<b style=\"color: red;\">Not complete</b>");
+				return "Auction successfully managed.";
 			}
-
-			var auction = db.FindAuctionById(id);
-
-			if (auction == null)
-			{
-				return "#Error: Could not find auction with such id.";
-			}
-
-			if (auction.OpenedOn != null)
-			{
-				return "#Error: Auction was already managed.";
-			}
-
-			auction.OpenedOn = DateTime.Now;
-			if (!approve)
-			{
-				auction.CompletedOn = auction.OpenedOn;
-			}
-
-			db.Entry(auction).State = EntityState.Modified;
-
-			try { db.SaveChanges(); }
-			catch { return "#Error: Could not manage auction."; }
-			
-			AuctionHub.HubContext.Clients.All.onAuctionManaged(auction.ID.ToString(), auction.Title, approve ? auction.AuctionTime : 0, auction.StartingPrice, string.Empty, "[No bidder]", "<b>" + auction.OpenedOn.Value.ToString(Settings.DateTimeFormat) + "</b>", auction.CompletedOn != null ? "<b>" + auction.CompletedOn.Value.ToString(Settings.DateTimeFormat) + "</b>" : "<b style=\"color: red;\">Not complete</b>");
-			return "Auction successfully managed.";
 		}
 
 		[HttpPost]
 		public string Bid(string guid, decimal amount)
 		{
-			var user = Session["user"] as User;
-			if (user == null) return "#Error: Please, log in!";
-
-			if (!Guid.TryParse(guid, out var id)) return "#Error: Invalid guid.";
-			var auction = db.FindAuctionById(id);
-			if (auction == null) return "#Error: Auction does not exist (to bid on such).";
-
-			if (auction.OpenedOn == null) return "#Error: Auction is not opened yet.";
-
-			if (auction.CompletedOn != null || DateTime.Now >= auction.OpenedOn.Value.AddSeconds(auction.AuctionTime))
+			lock (bidSync)
 			{
-				return "#Error: Auctions is closed.";
+				var user = Session["user"] as User;
+				if (user == null) return "#Error: Please, log in!";
+
+				if (!Guid.TryParse(guid, out var id)) return "#Error: Invalid guid.";
+				var auction = db.FindAuctionById(id);
+				if (auction == null) return "#Error: Auction does not exist (to bid on such).";
+
+				if (auction.OpenedOn == null) return "#Error: Auction is not opened yet.";
+
+				if (auction.CompletedOn != null || DateTime.Now >= auction.OpenedOn.Value.AddSeconds(auction.AuctionTime))
+				{
+					return "#Error: Auctions is closed.";
+				}
+
+				if (auction.Holder == user.ID) return "#Error: Cannot bid on owning auction.";
+
+				var lastBid = auction.LastBid;
+				if (lastBid != null)
+				{
+					if (amount <= lastBid.Amount) return "#Error: Cannot bid with lower price than current.";
+				}
+				else
+				{
+					if (amount <= auction.StartingPrice) return "#Error: Cannot bid with lower price than current.";
+				}
+
+				if (user.Balance < amount) return "#Error: Insufficient funds.";
+
+				if (lastBid != null)
+				{
+					lastBid.User.Balance += lastBid.Amount;
+					db.Entry(lastBid.User).State = EntityState.Modified;
+				}
+
+				user = db.FindUserById(user.ID);
+				user.Balance -= amount;
+				db.Entry(user).State = EntityState.Modified;
+
+				var bid = new Bid
+				{
+					ID = Guid.NewGuid(),
+					Bidder = user.ID,
+					Auction = auction.ID,
+					BidOn = DateTime.Now,
+					Amount = amount
+				};
+
+				try
+				{
+					db.Bids.Add(bid);
+					db.SaveChanges();
+				}
+				catch { return "#Error: Unable to register bid."; }
+
+				AuctionHub.HubContext.Clients.All.onBid(auction.ID.ToString(), user.ID.ToString(), user.FirstName + " " + user.LastName, bid.BidOn.ToString(Settings.DateTimeFormat), amount);
+				return "Bidding successful.";
 			}
-
-			if (auction.Holder == user.ID) return "#Error: Cannot bid on owning auction.";
-
-			var lastBid = auction.LastBid;
-			if (lastBid != null)
-			{
-				if (amount <= lastBid.Amount) return "#Error: Cannot bid with lower price than current.";
-			}
-			else
-			{
-				if (amount <= auction.StartingPrice) return "#Error: Cannot bid with lower price than current.";
-			}
-
-			if (user.Balance < amount) return "#Error: Insufficient funds.";
-
-			if (lastBid != null)
-			{
-				lastBid.User.Balance += lastBid.Amount;
-				db.Entry(lastBid.User).State = EntityState.Modified;
-			}
-
-			user = db.FindUserById(user.ID);
-			user.Balance -= amount;
-			db.Entry(user).State = EntityState.Modified;
-
-			var bid = new Bid
-			{
-				ID = Guid.NewGuid(),
-				Bidder = user.ID,
-				Auction = auction.ID,
-				BidOn = DateTime.Now,
-				Amount = amount
-			};
-
-			try
-			{
-				db.Bids.Add(bid);
-				db.SaveChanges();
-			}
-			catch { return "#Error: Unable to register bid."; }
-
-			AuctionHub.HubContext.Clients.All.onBid(auction.ID.ToString(), user.ID.ToString(), user.FirstName + " " + user.LastName, bid.BidOn.ToString(Settings.DateTimeFormat), amount);
-			return "Bidding successful.";
 		}
 
 		[HttpPost]
 		public string Claim(string guid)
 		{
-			var user = Session["user"] as User;
-			if (user == null) return string.Empty;
-
-			Auction auction = null;
-			if (Guid.TryParse(guid, out var id)) auction = db.FindAuctionById(id);
-
-			if (auction == null) return "#Error: Invalid auction.";
-
-			if (auction.Holder != user.ID) return "#Error: Can't claim auction prize.";
-
-			if (auction.OpenedOn == null) return "#Error: Auction is not opened.";
-
-			var now = DateTime.Now;
-
-			if (now < auction.OpenedOn.Value.AddSeconds(auction.AuctionTime)) return "#Error: Auction is not finished yet.";
-
-			if (auction.CompletedOn != null) return "#Error: Auction is completed, no prize left to claim.";
-
-			auction.CompletedOn = now;
-			db.Entry(auction).State = EntityState.Modified;
-
-			var lastBid = auction.LastBid;
-
-			if (lastBid != null)
+			lock (claimSync)
 			{
-				user = db.FindUserById(user.ID);
-				user.Balance += lastBid.Amount;
-				db.Entry(user).State = EntityState.Modified;
-			}
+				var user = Session["user"] as User;
+				if (user == null) return string.Empty;
 
-			try
-			{
-				db.SaveChanges();
-			}
-			catch { return "#Error: Could not claim auction prize. Please, try again."; }
+				Auction auction = null;
+				if (Guid.TryParse(guid, out var id)) auction = db.FindAuctionById(id);
 
-			return "Successfully claimed auction prize. Please, check your balance.";
+				if (auction == null) return "#Error: Invalid auction.";
+
+				if (auction.Holder != user.ID) return "#Error: Can't claim auction prize.";
+
+				if (auction.OpenedOn == null) return "#Error: Auction is not opened.";
+
+				var now = DateTime.Now;
+
+				if (now < auction.OpenedOn.Value.AddSeconds(auction.AuctionTime)) return "#Error: Auction is not finished yet.";
+
+				if (auction.CompletedOn != null) return "#Error: Auction is completed, no prize left to claim.";
+
+				auction.CompletedOn = now;
+				db.Entry(auction).State = EntityState.Modified;
+
+				var lastBid = auction.LastBid;
+
+				if (lastBid != null)
+				{
+					user = db.FindUserById(user.ID);
+					user.Balance += lastBid.Amount;
+					db.Entry(user).State = EntityState.Modified;
+				}
+
+				try
+				{
+					db.SaveChanges();
+				}
+				catch { return "#Error: Could not claim auction prize. Please, try again."; }
+
+				return "Successfully claimed auction prize. Please, check your balance.";
+			}
 		}
 	}
 }
