@@ -36,13 +36,13 @@ namespace AuctionHouse.Controllers
 		}
 
 		[HttpGet]
-		public ActionResult ViewProfile(string userid)
+		public ActionResult ViewProfile(string id)
 		{
 			if (Session["user"] == null) return HttpNotFound();
 
 			User user = null;
 
-			if (Guid.TryParse(userid, out var id)) user = db.FindUserById(id);
+			if (Guid.TryParse(id, out var userid)) user = db.FindUserById(userid);
 			else user = db.FindUserById(((User)Session["user"]).ID);
 
 			if (user == null) user = Models.User.Dummy;

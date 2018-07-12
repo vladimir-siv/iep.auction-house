@@ -183,6 +183,7 @@ namespace AuctionHouse.Controllers
 					if (amount <= auction.StartingPrice) return "#Error: Cannot bid with lower price than current.";
 				}
 
+				user = db.FindUserById(user.ID);
 				if (user.Balance < amount) return "#Error: Insufficient funds.";
 
 				if (lastBid != null)
@@ -191,7 +192,6 @@ namespace AuctionHouse.Controllers
 					db.Entry(lastBid.User).State = EntityState.Modified;
 				}
 
-				user = db.FindUserById(user.ID);
 				user.Balance -= amount;
 				db.Entry(user).State = EntityState.Modified;
 
