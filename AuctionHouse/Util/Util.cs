@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace AuctionHouse
 {
@@ -51,5 +52,13 @@ namespace AuctionHouse
 			if (isAscending) return x > y ? 1 : -1;
 			else return x < y ? 1 : -1;
 		}
+	}
+
+	public class TransactionException : Exception
+	{
+		public TransactionException() { }
+		public TransactionException(string message) : base(message) { }
+		public TransactionException(string message, Exception innerException) : base(message, innerException) { }
+		protected TransactionException(SerializationInfo info, StreamingContext context) : base(info, context) { }
 	}
 }
