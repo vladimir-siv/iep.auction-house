@@ -23,7 +23,7 @@ namespace AuctionHouse.Controllers
 				{
 					ViewBag.NavIndex = 3;
 					ViewBag.RecentAuctions = db.GetCurrentSystemParameters().RecentAuctions;
-					return View(db.FindReadyAuctions());
+					return View(db.FindReadyAuctions(true));
 				}
 				catch (Exception ex)
 				{

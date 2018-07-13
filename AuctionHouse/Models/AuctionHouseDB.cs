@@ -177,23 +177,26 @@ namespace AuctionHouse.Models
 			return result;
 		}
 
-		public Auction FindAuctionById(Guid guid, bool eagerLoadBidUsers = false)
+		public Auction FindAuctionById(Guid guid, bool eagerLoad = false)
 		{
 			var query =
 				from auction in Auctions
 				where auction.ID == guid
 				select auction;
 
-			if (eagerLoadBidUsers)
+			if (eagerLoad)
 			{
 				var result = query.SingleOrDefault();
 
 				if (result != null)
 				{
+					// Eager load user
+					var user = result.User;
+
 					// Eager load bid users
 					foreach (var bid in result.Bids)
 					{
-						var user = bid.User;
+						user = bid.User;
 					}
 				}
 
@@ -202,7 +205,7 @@ namespace AuctionHouse.Models
 			else return query.SingleOrDefault();
 		}
 
-		public IEnumerable<Auction> FindReadyAuctions(bool eagerLoadUsers = false)
+		public IEnumerable<Auction> FindReadyAuctions(bool eagerLoad = false)
 		{
 			var query =
 				from auction in Auctions
@@ -210,7 +213,7 @@ namespace AuctionHouse.Models
 				orderby auction.CreatedOn descending
 				select auction;
 
-			if (eagerLoadUsers)
+			if (eagerLoad)
 			{
 				var results = query.ToList();
 
@@ -225,7 +228,7 @@ namespace AuctionHouse.Models
 			else return query.ToList();
 		}
 
-		public IEnumerable<Auction> FindActiveAndCompletedAuctions(bool eagerLoadLastBids = false)
+		public IEnumerable<Auction> FindActiveAndCompletedAuctions(bool eagerLoad = false)
 		{
 			var query =
 				from auction in Auctions
@@ -233,7 +236,7 @@ namespace AuctionHouse.Models
 				orderby auction.OpenedOn descending
 				select auction;
 
-			if (eagerLoadLastBids)
+			if (eagerLoad)
 			{
 				var results = query.ToList();
 
