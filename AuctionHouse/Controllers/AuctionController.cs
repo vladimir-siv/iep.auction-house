@@ -13,7 +13,7 @@ namespace AuctionHouse.Controllers
     public class AuctionController : Controller
     {
 		private static readonly ILog log = LogManager.GetLogger("MainLog");
-		private static readonly AuctionHouseDB db = new AuctionHouseDB();
+		private readonly AuctionHouseDB db = new AuctionHouseDB();
 
 		[HttpGet]
 		public ActionResult Show(string id)

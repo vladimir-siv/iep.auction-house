@@ -11,7 +11,7 @@ namespace AuctionHouse.Controllers
     public class AdminController : Controller
 	{
 		private static readonly ILog log = LogManager.GetLogger("MainLog");
-		private static readonly AuctionHouseDB db = new AuctionHouseDB();
+		private readonly AuctionHouseDB db = new AuctionHouseDB();
 
 		[HttpGet]
         public ActionResult Index()

@@ -11,7 +11,7 @@ namespace AuctionHouse.Controllers
 	public class AccountController : Controller
 	{
 		private static readonly ILog log = LogManager.GetLogger("MainLog");
-		private static readonly AuctionHouseDB db = new AuctionHouseDB();
+		private readonly AuctionHouseDB db = new AuctionHouseDB();
 
 		[HttpPost]
 		public string Register([Bind(Include = "FirstName,LastName,Email,Password")] User user)
