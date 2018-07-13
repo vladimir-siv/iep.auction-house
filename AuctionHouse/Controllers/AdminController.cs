@@ -114,6 +114,7 @@ namespace AuctionHouse.Controllers
 						}
 
 						db.SaveChanges();
+						transaction.Commit();
 
 						try
 						{
