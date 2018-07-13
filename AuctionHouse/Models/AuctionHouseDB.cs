@@ -198,7 +198,7 @@ namespace AuctionHouse.Models
 			return query.ToList();
 		}
 
-		public IEnumerable<Auction> FindActiveAndCompletedAuctions()
+		public IEnumerable<Auction> FindActiveAndCompletedAuctions(bool loadLastBids = false)
 		{
 			var query =
 				from auction in Auctions
@@ -206,7 +206,23 @@ namespace AuctionHouse.Models
 				orderby auction.OpenedOn descending
 				select auction;
 
-			return query.ToList();
+			if (loadLastBids)
+			{
+				var results = query.ToList();
+
+				foreach (var auction in results)
+				{
+					// Eager load last bid & user
+					var lastBid = auction.LastBid;
+					if (lastBid != null)
+					{
+						var user = lastBid.User;
+					}
+				}
+
+				return results;
+			}
+			else return query.ToList();
 		}
 
 		public TokenOrder FindTokenOrderByGuid(Guid guid)

@@ -18,7 +18,7 @@ namespace AuctionHouse.Controllers
 				{
 					ViewBag.NavIndex = 0;
 					ViewBag.RecentAuctions = db.GetCurrentSystemParameters().RecentAuctions;
-					return View(db.FindActiveAndCompletedAuctions());
+					return View(db.FindActiveAndCompletedAuctions(true));
 				}
 				catch (Exception ex)
 				{
