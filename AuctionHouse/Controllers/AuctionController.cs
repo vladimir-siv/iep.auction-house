@@ -22,7 +22,7 @@ namespace AuctionHouse.Controllers
 				try
 				{
 					if (!Guid.TryParse(id, out var guid)) return HttpNotFound();
-					var auction = db.FindAuctionById(guid);
+					var auction = db.FindAuctionById(guid, true);
 					if (auction == null) return HttpNotFound();
 
 					if (auction.OpenedOn == null &&
